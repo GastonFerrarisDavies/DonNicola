@@ -3,14 +3,16 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class InventarioSucursal extends Model {
+  class Lote extends Model {
     static associate(models) {
-      InventarioSucursal.belongsTo(models.Sucursal, { foreignKey: 'sucursal_id' });
-      InventarioSucursal.belongsTo(models.Producto, { foreignKey: 'producto_id' });
+      Lote.belongsTo(models.Sucursal, { foreignKey: 'sucursalId' });
+      Lote.belongsTo(models.Producto, { foreignKey: 'productoId' });
     }
   }
-  InventarioSucursal.init({
+  Lote.init({
     cantidad: DataTypes.INTEGER,
+    fechaCaducidad: DataTypes.DATE,
+    fechaProduccion: DataTypes.DATE,
     sucursalId: {
       type: DataTypes.INTEGER,
       references: {
@@ -27,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }, {
     sequelize,
-    modelName: 'InventarioSucursal',
+    modelName: 'Lote',
   });
-  return InventarioSucursal;
+  return Lote;
 };

@@ -11,7 +11,8 @@ module.exports = (sequelize, DataTypes) => {
   }
   VentaDetalle.init({
     cantidad: DataTypes.INTEGER,
-    subtotal: DataTypes.DECIMAL,
+    fechaCaducidad: DataTypes.DATE,
+    fechaProduccion: DataTypes.DATE,
     ventaId: {
       type: DataTypes.INTEGER,
       references: {
