@@ -5,11 +5,14 @@ const port = process.env.PORT || 8080;
 const app = express();
 
 //Importar Rutas
-const authRoutes = require('./routes/authRoutes');
-const userRoutes = require('./routes/userRoutes');
 const productRoutes = require('./routes/productRoutes');
-const salesRoutes = require('./routes/salesRoutes');
-const brandRoutes = require('./routes/brandRoutes');
+const clienteRoutes = require('./routes/clienteRoutes');
+const sucursalRoutes = require('./routes/sucursalRoutes');
+const usuarioRoutes = require('./routes/usuarioRoutes');
+const ventaRoutes = require('./routes/ventaRoutes');
+const ventaDetalleRoutes = require('./routes/ventaDetalleRoutes');
+const loteRoutes = require('./routes/loteRoutes');
+const objetivoRoutes = require('./routes/objetivoRoutes');
 
 //Configurar Middlewares
 app.use(cors({origin: process.env.FRONTEND_URL || 'http://localhost:3000', credentials: true}));
@@ -21,11 +24,14 @@ app.get('/', (req, res) => {
 });
 
 //Usar Rutas
-app.use('/api/auth', authRoutes);
-app.use('/api/users', userRoutes);
 app.use('/api/products', productRoutes);
-app.use('/api/sales', salesRoutes);
-app.use('/api/brands', brandRoutes);
+app.use('/api/clientes', clienteRoutes);
+app.use('/api/sucursales', sucursalRoutes);
+app.use('/api/usuarios', usuarioRoutes);
+app.use('/api/ventas', ventaRoutes);
+app.use('/api/venta-detalles', ventaDetalleRoutes);
+app.use('/api/lotes', loteRoutes);
+app.use('/api/objetivos', objetivoRoutes);
 
 //Conectar Base de Datos e Iniciar Servidor
 db.sequelize.authenticate()

@@ -1,9 +1,8 @@
-version: '3.8'
 
 services:
   db:
     image: mysql:8.0
-    container_name: stock_sales_db
+    container_name: donnicola_db
     ports:
       - "3306:3306"
     environment:
@@ -19,7 +18,7 @@ services:
     build:
       context: ./backend 
       dockerfile: Dockerfile
-    container_name: stock_sales_backend
+    container_name: donnicola_backend
     ports:
       - "8080:8080" 
     environment:
@@ -38,7 +37,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: stock_sales_frontend
+    container_name: donnicola_frontend
     ports:
       - "3000:3000"
     environment:
