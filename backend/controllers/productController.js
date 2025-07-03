@@ -2,7 +2,7 @@ const db = require('../models');
 
 exports.getAllProducts = async (req, res) => {
     try {
-        const products = await db.Product.findAll();
+        const products = await db.Producto.findAll();
         res.json(products);
     } catch (error) {
         res.status(500).json({message: 'Error al obtener los productos', error: error.message});
@@ -11,7 +11,7 @@ exports.getAllProducts = async (req, res) => {
 
 exports.getProductById = async (req, res) => {
     try {
-        const product = await db.Product.findByPk(req.params.id);
+        const product = await db.Producto.findByPk(req.params.id);
         if (!product) {
             return res.status(404).json({message: 'Producto no encontrado'});
         }
@@ -23,7 +23,7 @@ exports.getProductById = async (req, res) => {
 
 exports.createProduct = async (req, res) => {
     try {
-        const product = await db.Product.create(req.body);
+        const product = await db.Producto.create(req.body);
         res.status(201).json(product);
     } catch (error) {
         res.status(500).json({message: 'Error al crear el producto', error: error.message});
@@ -32,7 +32,7 @@ exports.createProduct = async (req, res) => {
 
 exports.updateProduct = async (req, res) => {
     try {
-        const product = await db.Product.findByPk(req.params.id);
+        const product = await db.Producto.findByPk(req.params.id);
         if (!product) {
             return res.status(404).json({message: 'Producto no encontrado'});
         }
@@ -45,7 +45,7 @@ exports.updateProduct = async (req, res) => {
 
 exports.deleteProduct = async (req, res) => {
     try {
-        const product = await db.Product.findByPk(req.params.id);
+        const product = await db.Producto.findByPk(req.params.id);
         if (!product) {
             return res.status(404).json({message: 'Producto no encontrado'});
         }

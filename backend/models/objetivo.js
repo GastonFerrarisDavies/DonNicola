@@ -5,14 +5,21 @@ const {
 module.exports = (sequelize, DataTypes) => {
   class Objetivo extends Model {
     static associate(models) {
-      Objetivo.hasMany(models.Usuario, { foreignKey: 'usuarioId' });
+      Objetivo.belongsTo(models.Usuario, { foreignKey: 'usuarioId' });
     }
   }
   Objetivo.init({
     descripcion: DataTypes.TEXT,
     fechaInicio: DataTypes.DATE,
     fechaFin: DataTypes.DATE,
-    nombre: DataTypes.STRING
+    nombre: DataTypes.STRING,
+    usuarioId: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: 'Usuario',
+        key: 'id'
+      }
+    }
   }, {
     sequelize,
     modelName: 'Objetivo',

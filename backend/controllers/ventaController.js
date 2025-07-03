@@ -5,7 +5,7 @@ exports.getAllVentas = async (req, res) => {
         const ventas = await db.Venta.findAll({
             include: [
                 { model: db.Cliente, as: 'Cliente' },
-                { model: db.VentaDetalle, as: 'DetalleVenta' }
+                { model: db.VentaDetalle, as: 'VentaDetalle' }
             ]
         });
         res.json(ventas);
@@ -19,7 +19,7 @@ exports.getVentaById = async (req, res) => {
         const venta = await db.Venta.findByPk(req.params.id, {
             include: [
                 { model: db.Cliente, as: 'Cliente' },
-                { model: db.VentaDetalle, as: 'DetalleVenta' }
+                { model: db.VentaDetalle, as: 'VentaDetalle' }
             ]
         });
         if (!venta) {
