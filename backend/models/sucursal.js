@@ -5,8 +5,8 @@ const {
 module.exports = (sequelize, DataTypes) => {
   class Sucursal extends Model {
     static associate(models) {
-      Sucursal.hasMany(models.InventarioSucursal, { foreignKey: 'sucursalId'})
-      models.InventarioSucursal.belongsTo(Sucursal, { foreignKey: 'sucursalId'})
+      Sucursal.hasMany(models.Lote, { foreignKey: 'sucursalId'})
+      models.Lote.belongsTo(Sucursal, { foreignKey: 'sucursalId'})
     }
   }
   Sucursal.init({

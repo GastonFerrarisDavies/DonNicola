@@ -1,25 +1,22 @@
 'use strict';
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Objetivos', {
+    await queryInterface.createTable('Sucursales', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      descripcion: {
-        type: Sequelize.TEXT
-      },
-      fechaInicio: {
-        type: Sequelize.DATE
-      },
-      fechaFin: {
-        type: Sequelize.DATE
-      },
       nombre: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      direccion: {
+        type: Sequelize.TEXT,
+        allowNull: false
       },
       createdAt: {
         allowNull: false,
@@ -31,7 +28,8 @@ module.exports = {
       }
     });
   },
+
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Objetivos');
+    await queryInterface.dropTable('Sucursales');
   }
-};
+}; 

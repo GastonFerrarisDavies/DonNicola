@@ -1,4 +1,5 @@
 'use strict';
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
@@ -10,22 +11,24 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       nombre: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
       descripcion: {
-        type: Sequelize.TEXT
+        type: Sequelize.TEXT,
+        allowNull: true
       },
-      price: {
-        type: Sequelize.DECIMAL
-      },
-      fecha: {
-        type: Sequelize.DATE
-      },
-      fechaCaducidad: {
-        type: Sequelize.DATE
+      precio: {
+        type: Sequelize.DECIMAL(10, 2),
+        allowNull: false
       },
       tipo: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
+      imagen: {
+        type: Sequelize.STRING,
+        allowNull: true
       },
       createdAt: {
         allowNull: false,
@@ -37,7 +40,8 @@ module.exports = {
       }
     });
   },
+
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('Productos');
   }
-};
+}; 

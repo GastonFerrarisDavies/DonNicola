@@ -6,12 +6,12 @@ module.exports = (sequelize, DataTypes) => {
   class Venta extends Model {
     static associate(models) {
       Venta.belongsTo(models.Cliente, { foreignKey: 'clienteId' });
-      Venta.hasMany(models.DetalleVenta, { foreignKey: 'ventaId' });
+      Venta.hasMany(models.VentaDetalle, { foreignKey: 'ventaId' });
     }
   }
   Venta.init({
     fecha: DataTypes.DATE,
-    total: DataTypes.DECIMAL,
+    total: DataTypes.DECIMAL(10, 2),
     clienteId: {
       type: DataTypes.INTEGER,
       references: {

@@ -1,19 +1,32 @@
 'use strict';
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Sucursals', {
+    await queryInterface.createTable('Ventas', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      nombre: {
-        type: Sequelize.STRING
+      fecha: {
+        type: Sequelize.DATE,
+        allowNull: false
       },
-      direccion: {
-        type: Sequelize.TEXT
+      total: {
+        type: Sequelize.DECIMAL(10, 2),
+        allowNull: false
+      },
+      clienteId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'Clientes',
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       createdAt: {
         allowNull: false,
@@ -25,7 +38,8 @@ module.exports = {
       }
     });
   },
+
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Sucursals');
+    await queryInterface.dropTable('Ventas');
   }
-};
+}; 
