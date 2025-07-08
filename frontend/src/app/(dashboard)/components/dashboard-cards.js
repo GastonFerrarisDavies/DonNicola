@@ -1,9 +1,9 @@
 "use client"
 
 import { useState } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/card"
-import { Button } from "@/components/button"
-import { Badge } from "@/components/badge"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
 import { Package, Users, Target, ShoppingCart, UserCheck, Archive, Plus, Eye, Edit } from "lucide-react"
 
 const dashboardSections = [
@@ -12,7 +12,7 @@ const dashboardSections = [
     title: "Gestión de Lotes",
     description: "Administra y controla los lotes de productos",
     icon: Archive,
-    color: "bg-blue-500",
+    color: "bg-quinary",
     stats: { total: 45, pending: 12 },
     actions: ["Crear Lote", "Ver Todos", "Importar"],
   },
@@ -21,7 +21,7 @@ const dashboardSections = [
     title: "Productos",
     description: "Catálogo completo de productos disponibles",
     icon: Package,
-    color: "bg-green-500",
+    color: "bg-primary",
     stats: { total: 1247, pending: 23 },
     actions: ["Añadir Producto", "Gestionar Stock", "Categorías"],
   },
@@ -30,7 +30,7 @@ const dashboardSections = [
     title: "Usuarios del Sistema",
     description: "Gestión de usuarios y permisos",
     icon: Users,
-    color: "bg-purple-500",
+    color: "bg-secondary",
     stats: { total: 28, pending: 3 },
     actions: ["Nuevo Usuario", "Roles", "Permisos"],
   },
@@ -39,7 +39,7 @@ const dashboardSections = [
     title: "Base de Clientes",
     description: "Información y gestión de clientes",
     icon: UserCheck,
-    color: "bg-orange-500",
+    color: "bg-quaternary",
     stats: { total: 892, pending: 15 },
     actions: ["Añadir Cliente", "Segmentación", "Historial"],
   },
@@ -48,7 +48,7 @@ const dashboardSections = [
     title: "Registro de Ventas",
     description: "Seguimiento de todas las transacciones",
     icon: ShoppingCart,
-    color: "bg-red-500",
+    color: "bg-secondary",
     stats: { total: 156, pending: 8 },
     actions: ["Nueva Venta", "Facturas", "Reportes"],
   },
@@ -57,19 +57,19 @@ const dashboardSections = [
     title: "Objetivos y Metas",
     description: "Definición y seguimiento de objetivos",
     icon: Target,
-    color: "bg-yellow-500",
+    color: "bg-quinary",
     stats: { total: 12, pending: 4 },
     actions: ["Nuevo Objetivo", "Progreso", "Análisis"],
   },
 ]
 
 export function DashboardCards() {
-  const [selectedSection, setSelectedSection] = useState<string | null>(null)
+  const [selectedSection, setSelectedSection] = useState(null)
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold">Módulos de Gestión</h2>
+        <h2 className="text-xl font-semibold text-quaternary">Módulos de Gestión</h2>
         <Button variant="outline" size="sm">
           <Plus className="mr-2 h-4 w-4" />
           Acceso Rápido
@@ -80,7 +80,7 @@ export function DashboardCards() {
         {dashboardSections.map((section) => (
           <Card
             key={section.id}
-            className="group cursor-pointer transition-all hover:shadow-lg hover:scale-[1.02]"
+            className="group transition-all hover:shadow-lg hover:scale-[1.02] border-quaternary/20"
             onClick={() => setSelectedSection(section.id)}
           >
             <CardHeader className="pb-3">
@@ -98,13 +98,13 @@ export function DashboardCards() {
 
             <CardContent className="space-y-4">
               <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Total registros:</span>
-                <span className="font-medium">{section.stats.total}</span>
+                <span className="text-quaternary/70">Total registros:</span>
+                <span className="font-medium text-quaternary">{section.stats.total}</span>
               </div>
 
               {section.stats.pending > 0 && (
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Pendientes:</span>
+                  <span className="text-quaternary/70">Pendientes:</span>
                   <Badge variant="outline" className="text-xs">
                     {section.stats.pending}
                   </Badge>
@@ -112,11 +112,11 @@ export function DashboardCards() {
               )}
 
               <div className="flex gap-2 pt-2">
-                <Button size="sm" className="flex-1">
+                <Button size="sm" className="flex-1" variant="default">
                   <Plus className="mr-1 h-3 w-3" />
                   Crear
                 </Button>
-                <Button size="sm" variant="outline">
+                <Button size="sm" variant="secondary">
                   <Eye className="h-3 w-3" />
                 </Button>
                 <Button size="sm" variant="outline">

@@ -32,18 +32,18 @@ export function StatsOverview() {
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       {stats.map((stat) => (
-        <Card key={stat.title}>
+        <Card key={stat.title} className="border-quaternary/20">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">{stat.title}</CardTitle>
-            {stat.trend === "up" && <TrendingUp className="h-4 w-4 text-green-600" />}
-            {stat.trend === "down" && <TrendingDown className="h-4 w-4 text-red-600" />}
-            {stat.trend === "neutral" && <Minus className="h-4 w-4 text-gray-600" />}
+            <CardTitle className="text-sm font-medium text-quaternary/70">{stat.title}</CardTitle>
+            {stat.trend === "up" && <TrendingUp className="h-4 w-4 text-primary" />}
+            {stat.trend === "down" && <TrendingDown className="h-4 w-4 text-secondary" />}
+            {stat.trend === "neutral" && <Minus className="h-4 w-4 text-quaternary/50" />}
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stat.value}</div>
+            <div className="text-2xl font-bold text-quaternary">{stat.value}</div>
             <p
               className={`text-xs ${
-                stat.trend === "up" ? "text-green-600" : stat.trend === "down" ? "text-red-600" : "text-gray-600"
+                stat.trend === "up" ? "text-primary" : stat.trend === "down" ? "text-secondary" : "text-quaternary/50"
               }`}
             >
               {stat.change} desde el mes pasado

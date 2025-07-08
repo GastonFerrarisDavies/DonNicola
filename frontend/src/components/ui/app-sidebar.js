@@ -2,19 +2,6 @@
 
 import { Package, Users, Target, ShoppingCart, UserCheck, Archive, BarChart3, Settings } from "lucide-react"
 
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarRail,
-} from "@/components/ui/sidebar"
-
 const navigationItems = [
   {
     title: "Gestión",
