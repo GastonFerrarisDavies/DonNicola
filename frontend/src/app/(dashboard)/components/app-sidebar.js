@@ -75,14 +75,14 @@ const navigationItems = [
 
 export function AppSidebar() {
   return (
-    <Sidebar>
+    <Sidebar collapsible="offcanvas">
       <SidebarHeader className="border-b border-quaternary/20">
         <div className="flex items-center gap-2 px-4 py-2">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-white">
             <BarChart3 className="h-4 w-4" />
           </div>
           <div className="grid flex-1 text-left text-sm leading-tight">
-            <span className="truncate font-semibold text-white">DonNicola</span>
+            <span className="truncate font-semibold text-white">Don Nicola</span>
             <span className="truncate text-xs text-white/70">Dashboard</span>
           </div>
         </div>

@@ -4,7 +4,7 @@ import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Package, Users, Target, ShoppingCart, UserCheck, Archive, Plus, Eye, Edit } from "lucide-react"
+import { Package, Users, Target, ShoppingCart, UserCheck, Archive, Plus, Eye, Edit, Building } from "lucide-react"
 
 const dashboardSections = [
   {
@@ -54,6 +54,14 @@ const dashboardSections = [
     icon: Target,
     stats: { total: 12, pending: 4 },
     actions: ["Nuevo Objetivo", "Progreso", "Análisis"],
+  },
+  {
+    id: "sucursales",
+    title: "Sucursales",
+    description: "Administración de sucursales y sus lotes",
+    icon: Building,
+    stats: { total: 2, pending: 1},
+    actions: [],
   },
 ]
 
