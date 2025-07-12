@@ -5,13 +5,13 @@
 }
 
 :root {
-  --primary: #6f1d1b;
-  --secondary: #e63946;
-  --tertiary: #fdf0d5;
-  --quaternary: #1d3557;
-  --quinary: #457b9d;
-  --background1: #E2E2E2;
-  --background2: #F8F8F8;
+  --primary: #8B4513;
+  --secondary: #D2691E;
+  --tertiary: #FEF7E0;
+  --quaternary: #2F2F2F;
+  --quinary: #A0522D;
+  --background1: #FAFAFA;
+  --background2: #F5F5F5;
 }
 
 body {

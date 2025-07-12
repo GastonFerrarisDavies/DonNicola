@@ -1,6 +1,4 @@
 import "./globals.css";
-import "@radix-ui/themes/styles.css";
-
 
 export const metadata = {
   title: "Don Nicola",
