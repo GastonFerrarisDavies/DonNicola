@@ -4,16 +4,6 @@
   font-family: "Inter", sans-serif;
 }
 
-:root {
-  --primary: #8B4513;
-  --secondary: #D2691E;
-  --tertiary: #FEF7E0;
-  --quaternary: #2F2F2F;
-  --quinary: #A0522D;
-  --background1: #FAFAFA;
-  --background2: #F5F5F5;
-}
-
 body {
   background-color: var(--background1);
   color: var(--quaternary);

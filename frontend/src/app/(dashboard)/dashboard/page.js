@@ -2,6 +2,64 @@
 
 import Link from "next/link"
 import { useState, useEffect } from "react"
+import { Archive, Package, Users, UserCheck, Target, Building2 } from "lucide-react"
+
+const dashboardSecciones = [
+  {
+    id: "lotes",
+    title: "Gestión de Lotes",
+    description: "Administra y controla los lotes de productos",
+    icon: Archive,
+    color: "bg-blue-500",
+    stats: { total: 45, pending: 12 },
+    actions: ["Crear Lote", "Ver Todos", "Importar"],
+  },
+  {
+    id: "productos",
+    title: "Productos",
+    description: "Catálogo completo de productos disponibles",
+    icon: Package,
+    color: "bg-green-500",
+    stats: { total: 1247, pending: 23 },
+    actions: ["Añadir Producto", "Gestionar Stock", "Categorías"],
+  },
+  {
+    id: "usuarios",
+    title: "Usuarios del Sistema",
+    description: "Gestión de usuarios y permisos",
+    icon: Users,
+    color: "bg-purple-500",
+    stats: { total: 28, pending: 3 },
+    actions: ["Nuevo Usuario", "Roles", "Permisos"],
+  },
+  {
+    id: "clientes",
+    title: "Base de Clientes",
+    description: "Información y gestión de clientes",
+    icon: UserCheck,
+    color: "bg-orange-500",
+    stats: { total: 892, pending: 15 },
+    actions: ["Añadir Cliente", "Segmentación", "Historial"],
+  },
+  {
+    id: "objetivos",
+    title: "Objetivos y Metas",
+    description: "Definición y seguimiento de objetivos",
+    icon: Target,
+    color: "bg-yellow-500",
+    stats: { total: 12, pending: 4 },
+    actions: ["Nuevo Objetivo", "Progreso", "Análisis"],
+  },
+  {
+    id: "sucursales",
+    title: "Sucursales",
+    description: "Gestión de sucursales",
+    icon: Building2,
+    color: "bg-pink-500",
+    stats: { total: 2, pending: 1 },
+    actions: ["Nueva Sucursal", "Gestionar", "Reportes"],
+  }
+]
 
 export default function Dashboard() {
   const [currentDate, setCurrentDate] = useState("")
@@ -30,8 +88,9 @@ export default function Dashboard() {
       <nav className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
-              <h1 className="text-xl font-bold text-gray-900">MiEmpresa Dashboard</h1>
+            <div className="flex flex-col">
+              <h1 className="text-xl font-bold text-gray-900">Don Nicola</h1>
+              <p className="text-sm text-gray-600">Panel de Administración</p>
             </div>
 
             <div className="flex items-center space-x-4">
@@ -175,6 +234,44 @@ export default function Dashboard() {
             </div>
           </div>
 
+
+          {/* Secciones (Cards del Dashboard) */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            {dashboardSecciones.map((seccion) => (
+              <div key={seccion.id} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 flex flex-col justify-between min-h-[320px]">
+                <div className="flex items-center mb-4">
+                  <div className={`w-12 h-12 flex items-center justify-center rounded-lg ${seccion.color} mr-4`}>
+                    <seccion.icon className="w-7 h-7 text-white" />
+                  </div>
+                  <div className="flex-1 flex justify-end">
+                    <span className="bg-gray-100 text-gray-600 text-xs font-semibold px-3 py-1 rounded-full">{seccion.stats.total}</span>
+                  </div>
+                </div>
+                <h3 className="text-lg font-bold text-gray-900 mb-1">{seccion.title}</h3>
+                <p className="text-gray-600 text-sm mb-4">{seccion.description}</p>
+                <div className="mb-2">
+                  <span className="text-gray-500 text-sm">Total registros:</span>
+                  <span className="ml-2 font-bold text-gray-900">{seccion.stats.total}</span>
+                </div>
+                <div className="mb-4 flex items-center">
+                  <span className="text-gray-500 text-sm">Pendientes:</span>
+                  <span className="ml-2 font-bold text-yellow-600 bg-yellow-100 rounded-full px-3 py-1 text-sm">{seccion.stats.pending}</span>
+                </div>
+                <div className="flex gap-2 mt-auto">
+                  <button className="transition-all duration-300 cursor-pointer flex-1 bg-black/90 hover:bg-black/80 text-white font-semibold py-2 rounded-lg transition-colors">
+                    + Crear
+                  </button>
+                  <button className="transition-all duration-300 cursor-pointer bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 rounded-lg flex items-center justify-center" title="Ver">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                  </button>
+                  <button className="transition-all duration-300 cursor-pointer bg-yellow-100 hover:bg-yellow-200 text-yellow-700 px-3 rounded-lg flex items-center justify-center" title="Editar">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536M9 13l6.586-6.586a2 2 0 112.828 2.828L11.828 15.828a4 4 0 01-1.414.828l-4 1a1 1 0 01-1.213-1.213l1-4a4 4 0 01.828-1.414z" /></svg>
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+          
           {/* Activity Feed */}
           <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Actividad Reciente</h3>
