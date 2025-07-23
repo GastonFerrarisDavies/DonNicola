@@ -13,6 +13,7 @@ const dashboardSecciones = [
     color: "bg-blue-500",
     stats: { total: 45, pending: 12 },
     actions: ["Crear Lote", "Ver Todos", "Importar"],
+    link: "lotes",
   },
   {
     id: "productos",
@@ -22,6 +23,7 @@ const dashboardSecciones = [
     color: "bg-green-500",
     stats: { total: 1247, pending: 23 },
     actions: ["Añadir Producto", "Gestionar Stock", "Categorías"],
+    link: "/productos",
   },
   {
     id: "usuarios",
@@ -31,6 +33,7 @@ const dashboardSecciones = [
     color: "bg-purple-500",
     stats: { total: 28, pending: 3 },
     actions: ["Nuevo Usuario", "Roles", "Permisos"],
+
   },
   {
     id: "clientes",
@@ -258,9 +261,11 @@ export default function Dashboard() {
                   <span className="ml-2 font-bold text-yellow-600 bg-yellow-100 rounded-full px-3 py-1 text-sm">{seccion.stats.pending}</span>
                 </div>
                 <div className="flex gap-2 mt-auto">
-                  <button className="transition-all duration-300 cursor-pointer flex-1 bg-black/90 hover:bg-black/80 text-white font-semibold py-2 rounded-lg transition-colors">
-                    + Crear
-                  </button>
+                <Link
+                className="transition-all text-center duration-300 cursor-pointer flex-1 bg-black/90 hover:bg-black/80 text-white font-semibold py-2 rounded-lg transition-colors"
+                href={`/${seccion.id}`}>
+                  + Crear
+                </Link>
                   <button className="transition-all duration-300 cursor-pointer bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 rounded-lg flex items-center justify-center" title="Ver">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
                   </button>

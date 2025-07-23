@@ -1,11 +1,13 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Package, Upload, Save, ArrowLeft, Eye, Edit, Trash2 } from "lucide-react"
 import Link from "next/link"
+import { createProduct, getAllProducts, updateProduct, deleteProduct } from "@/lib/api/apiProduct"
 
 export default function ProductosPage() {
   const [productos, setProductos] = useState([])
+  const [loading, setLoading] = useState(false)
   const [isFormOpen, setIsFormOpen] = useState(false)
   const [editingProduct, setEditingProduct] = useState(null)
   const [formData, setFormData] = useState({
@@ -17,13 +19,27 @@ export default function ProductosPage() {
   })
   const [imagePreview, setImagePreview] = useState(null)
 
+  // Cargar productos al montar el componente
+  useEffect(() => {
+    loadProducts();
+  }, []);
+
+  const loadProducts = async () => {
+    try {
+      setLoading(true);
+      const data = await getAllProducts();
+      setProductos(data);
+    } catch (error) {
+      console.error("Error al cargar productos:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const tiposProducto = [
-    { id: 1, nombre: "Vino Tinto" },
-    { id: 2, nombre: "Vino Blanco" },
-    { id: 3, nombre: "Vino Rosado" },
-    { id: 4, nombre: "Espumante" },
-    { id: 5, nombre: "Licor" },
-    { id: 6, nombre: "Otros" }
+    { id: 1, nombre: "Queso" },
+    { id: 2, nombre: "Fiambre" },
+    { id: 3, nombre: "Materia Prima" }
   ]
 
   const handleInputChange = (e) => {
@@ -51,33 +67,35 @@ export default function ProductosPage() {
     }
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     
-    const newProduct = {
-      id: editingProduct ? editingProduct.id : Date.now(),
-      ...formData,
-      precio: parseFloat(formData.precio),
-      fechaCreacion: new Date().toISOString()
+    try {
+      setLoading(true)
+      if (editingProduct) {
+        await updateProduct(editingProduct.id, formData);
+      } else {
+        await createProduct(formData);
+      }
+      
+      // Recargar productos después de crear/actualizar
+      await loadProducts();
+      
+      setFormData({
+        nombre: "",
+        tipo: "",
+        descripcion: "",
+        precio: "",
+        imagen: null
+      })
+      setImagePreview(null)
+      setIsFormOpen(false)
+      setEditingProduct(null)
+    } catch (error) {
+      console.error("Error al crear el producto:", error)
+    } finally {
+      setLoading(false)
     }
-
-    if (editingProduct) {
-      setProductos(prev => prev.map(p => p.id === editingProduct.id ? newProduct : p))
-    } else {
-      setProductos(prev => [...prev, newProduct])
-    }
-
-    // Limpiar formulario
-    setFormData({
-      nombre: "",
-      tipo: "",
-      descripcion: "",
-      precio: "",
-      imagen: null
-    })
-    setImagePreview(null)
-    setIsFormOpen(false)
-    setEditingProduct(null)
   }
 
   const handleEdit = (producto) => {
@@ -93,9 +111,17 @@ export default function ProductosPage() {
     setIsFormOpen(true)
   }
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     if (confirm("¿Estás seguro de que quieres eliminar este producto?")) {
-      setProductos(prev => prev.filter(p => p.id !== id))
+      try {
+        setLoading(true);
+        await deleteProduct(id);
+        await loadProducts(); // Recargar productos después de eliminar
+      } catch (error) {
+        console.error("Error al eliminar el producto:", error);
+      } finally {
+        setLoading(false);
+      }
     }
   }
 
@@ -293,6 +319,7 @@ export default function ProductosPage() {
                 </button>
                 <button
                   type="submit"
+                  disabled={loading}
                   className="px-4 py-2 bg-blue-600 border border-transparent rounded-md text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 flex items-center space-x-2"
                 >
                   <Save className="w-4 h-4" />
@@ -311,7 +338,14 @@ export default function ProductosPage() {
             </h3>
           </div>
 
-          {productos.length === 0 ? (
+          {loading && (
+            <div className="p-12 text-center">
+              <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+              <p className="mt-2 text-sm text-gray-500">Cargando productos...</p>
+            </div>
+          )}
+
+          {!loading && productos.length === 0 ? (
             <div className="p-12 text-center">
               <Package className="mx-auto h-12 w-12 text-gray-400" />
               <h3 className="mt-2 text-sm font-medium text-gray-900">No hay productos</h3>
@@ -328,7 +362,7 @@ export default function ProductosPage() {
                 </button>
               </div>
             </div>
-          ) : (
+          ) : !loading ? (
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
@@ -341,9 +375,6 @@ export default function ProductosPage() {
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Precio
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Fecha
                     </th>
                     <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Acciones
@@ -385,10 +416,7 @@ export default function ProductosPage() {
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        ${producto.precio?.toFixed(2)}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {new Date(producto.fechaCreacion).toLocaleDateString('es-ES')}
+                        ${producto.precio}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <div className="flex justify-end space-x-2">
@@ -411,7 +439,7 @@ export default function ProductosPage() {
                 </tbody>
               </table>
             </div>
-          )}
+          ) : null}
         </div>
       </div>
     </div>
