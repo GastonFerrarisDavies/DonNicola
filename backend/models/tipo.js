@@ -5,7 +5,7 @@ const {
 module.exports = (sequelize, DataTypes) => {
   class Tipo extends Model {
   }
-  Producto.init({
+  Tipo.init({
     nombre: DataTypes.STRING,
   }, {
     sequelize,

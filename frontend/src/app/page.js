@@ -1,5 +1,6 @@
 'use client'  
 import Link from "next/link"
+import { useState } from "react"
 import Boton from "../components/boton"
 import Tarjeta from "../components/tarjeta"
 import Footer from "../components/footer";
@@ -7,7 +8,7 @@ import Footer from "../components/footer";
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-tertiary">
-      {/* Header mejorado */}
+      {/* Header */}
       <header className="bg-white/95 backdrop-blur-sm shadow-lg border-b border-gray-100 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
@@ -44,13 +45,19 @@ export default function HomePage() {
                 >
                   Contacto
                 </Link>
+                <Link
+                  href="/login"
+                  className="bg-primary hover:bg-secondary text-white px-6 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:shadow-lg transform hover:-translate-y-0.5"
+                >
+                  Iniciar Sesión
+                </Link>
               </div>
             </nav>
           </div>
         </div>
       </header>
 
-      {/* Hero Section mejorado */}
+      {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-primary via-secondary to-quinary text-white overflow-hidden">
         <div className="absolute inset-0 bg-black/20"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32">
@@ -75,7 +82,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Sección de características mejorada */}
+      {/* Sección de características */}
       <section className="py-24 bg-gradient-to-b from-white to-tertiary">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-20">
@@ -138,7 +145,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Stats Section mejorado */}
+      {/* Stats Section */}
       <section className="py-24 bg-gradient-to-r from-primary to-secondary text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -168,7 +175,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* CTA Section mejorado */}
+      {/* CTA Section */}
       <section className="py-24 bg-gradient-to-br from-quaternary to-quinary text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-4xl md:text-5xl font-bold mb-6">¿Listo para descubrir?</h2>

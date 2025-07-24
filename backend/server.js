@@ -22,7 +22,7 @@ const ventaRoutes = require('./routes/ventaRoutes');
 const ventaDetalleRoutes = require('./routes/ventaDetalleRoutes');
 const loteRoutes = require('./routes/loteRoutes');
 const objetivoRoutes = require('./routes/objetivoRoutes');
-
+const authRoutes = require('./routes/authRoutes');
 
 //Usar Rutas
 app.use('/api/productos', productRoutes);
@@ -33,11 +33,7 @@ app.use('/api/ventas', ventaRoutes);
 app.use('/api/venta-detalles', ventaDetalleRoutes);
 app.use('/api/lotes', loteRoutes);
 app.use('/api/objetivos', objetivoRoutes);
-//Middleware de logging para depuración
-app.use((req, res, next) => {
-    console.log(`${req.method} ${req.path} - ${new Date().toISOString()}`);
-    next();
-});
+app.use('/api/auth', authRoutes);
 
 //Middleware 404 - debe ir al final
 app.use((req, res) => {

@@ -1,4 +1,4 @@
-// frontend/src/lib/api.js
+// frontend/src/lib/api/apiProduct.js
 
 // La URL base de tu API de backend.
 // Esta variable se obtiene de NEXT_PUBLIC_API_URL en tu .env.local
