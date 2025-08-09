@@ -2,9 +2,18 @@
 
 import Link from "next/link"
 import { useState, useEffect } from "react"
-import { Archive, Package, Users, UserCheck, Target, Building2 } from "lucide-react"
+import { Archive, Package, Users, UserCheck, Target, Building2, ShoppingCart } from "lucide-react"
 
 const dashboardSecciones = [
+  {
+    id: "ventas",
+    title: "Ventas",
+    description: "Gestión de ventas",
+    icon: ShoppingCart,
+    color: "bg-green-500",
+    stats: { total: 12, pending: 4 },
+    actions: ["Nuevo Venta", "Progreso", "Análisis"],
+  },
   {
     id: "lotes",
     title: "Gestión de Lotes",
@@ -20,7 +29,7 @@ const dashboardSecciones = [
     title: "Productos",
     description: "Catálogo completo de productos disponibles",
     icon: Package,
-    color: "bg-green-500",
+    color: "bg-red-500",
     stats: { total: 1247, pending: 23 },
     actions: ["Añadir Producto", "Gestionar Stock", "Categorías"],
     link: "/productos",
