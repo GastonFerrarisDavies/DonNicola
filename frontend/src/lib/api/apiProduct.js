@@ -4,13 +4,7 @@
 // Esta variable se obtiene de NEXT_PUBLIC_API_URL en tu .env.local
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
-/**
- * Realiza una petición fetch genérica a la API.
- * @param {string} endpoint - La ruta específica de la API (ej. '/productos').
- * @param {object} options - Opciones para la petición fetch (method, headers, body, etc.).
- * @returns {Promise<any>} - La respuesta parseada como JSON.
- * @throws {Error} - Si la respuesta no es exitosa.
- */
+
 async function apiFetch(endpoint, options = {}) {
     const url = `${API_BASE_URL}${endpoint}`;
     const defaultHeaders = {
@@ -48,23 +42,12 @@ async function apiFetch(endpoint, options = {}) {
     }
 }
 
-// ======================================================
-// Funciones Específicas para cada Recurso de la API
-// ======================================================
 
-/**
- * Obtiene todos los productos del backend.
- * @returns {Promise<Array>} - Un array de objetos producto.
- */
 export async function getAllProducts() {
     return apiFetch('/productos');
 }
 
-/**
- * Crea un nuevo producto en el backend.
- * @param {object} productData - Los datos del producto a crear.
- * @returns {Promise<object>} - El objeto del producto creado.
- */
+
 export async function createProduct(productData) {
     // Preparar los datos del producto
     const productPayload = {
@@ -81,21 +64,12 @@ export async function createProduct(productData) {
     });
 }
 
-/**
- * Obtiene un producto por su ID.
- * @param {number} id - El ID del producto.
- * @returns {Promise<object>} - El objeto del producto.
- */
+
 export async function getProductById(id) {
     return apiFetch(`/productos/${id}`);
 }
 
-/**
- * Actualiza un producto existente en el backend.
- * @param {number} id - El ID del producto a actualizar.
- * @param {object} productData - Los nuevos datos del producto.
- * @returns {Promise<object>} - El objeto del producto actualizado.
- */
+
 export async function updateProduct(id, productData) {
     // Preparar los datos del producto
     const productPayload = {
@@ -112,18 +86,14 @@ export async function updateProduct(id, productData) {
     });
 }
 
-/**
- * Elimina un producto del backend.
- * @param {number} id - El ID del producto a eliminar.
- * @returns {Promise<object>} - Confirmación de eliminación.
- */
+
 export async function deleteProduct(id) {
     return apiFetch(`/productos/${id}`, {
         method: 'DELETE',
     });
 }
 
-// Ejemplo: Funciones para Lotes
+
 export async function createLote(loteData) {
     return apiFetch('/lotes', {
         method: 'POST',

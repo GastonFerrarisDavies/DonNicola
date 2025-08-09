@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { register } from '@/lib/api/apiAuth';
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -9,7 +10,8 @@ export default function RegisterPage() {
     apellido: '',
     email: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    rol: 'usuario' // Rol por defecto
   });
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
@@ -81,11 +83,13 @@ export default function RegisterPage() {
     setIsLoading(true);
     
     try {
-      // Aquí iría la lógica de registro con tu API
-      // Por ahora simulamos un delay
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      // Usar la función register del archivo apiAuth.js
+      const data = await register({
+        email: formData.email,
+        password: formData.password,
+        rol: formData.rol
+      });
       
-      // Redirigir al dashboard después del registro exitoso
       router.push('/dashboard');
     } catch (error) {
       console.error('Error en el registro:', error);

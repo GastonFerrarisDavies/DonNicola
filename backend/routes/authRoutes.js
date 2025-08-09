@@ -3,7 +3,8 @@ const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/authController');
 
+router.get('/', authController.getAllUsers);
 router.post('/login', authController.login);
-router.post('/register', authController.register); // Opcional: Ruta para registrar nuevos usuarios
+router.post('/register', authController.register);
 
 module.exports = router;

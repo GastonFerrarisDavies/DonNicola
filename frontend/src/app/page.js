@@ -1,11 +1,76 @@
 'use client'  
 import Link from "next/link"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Boton from "../components/boton"
 import Tarjeta from "../components/tarjeta"
-import Footer from "../components/footer";
+import Footer from "../components/footer"
+import { isAuthenticated, getCurrentUser } from "@/lib/api/apiAuth"
 
 export default function HomePage() {
+  const [userAuth, setUserAuth] = useState({
+    isLoggedIn: false,
+    user: null
+  });
+
+  useEffect(() => {
+    // Verificar el estado de autenticación al cargar la página
+    const checkAuth = () => {
+      try {
+        const authStatus = isAuthenticated();
+        console.log('Auth status check:', authStatus); // Debug log
+        
+        if (authStatus) {
+          const userData = getCurrentUser();
+          console.log('User data:', userData); // Debug log
+          setUserAuth({
+            isLoggedIn: true,
+            user: userData
+          });
+        } else {
+          console.log('User not authenticated'); // Debug log
+          setUserAuth({
+            isLoggedIn: false,
+            user: null
+          });
+        }
+      } catch (error) {
+        console.error('Error checking authentication:', error);
+        setUserAuth({
+          isLoggedIn: false,
+          user: null
+        });
+      }
+    };
+
+    // Verificar autenticación inicial
+    checkAuth();
+
+    // Escuchar cambios en localStorage (para cuando el usuario hace login/logout en otra pestaña)
+    const handleStorageChange = (e) => {
+      if (e.key === 'authToken' || e.key === 'userData') {
+        checkAuth();
+      }
+    };
+
+    // Escuchar eventos personalizados de autenticación (para cambios en la misma pestaña)
+    const handleAuthChange = (e) => {
+      const { isAuthenticated: authStatus, user } = e.detail;
+      setUserAuth({
+        isLoggedIn: authStatus,
+        user: user
+      });
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('authChange', handleAuthChange);
+
+    // Cleanup
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('authChange', handleAuthChange);
+    };
+  }, []);
+
   return (
     <div className="min-h-screen bg-tertiary">
       {/* Header */}
@@ -45,12 +110,24 @@ export default function HomePage() {
                 >
                   Contacto
                 </Link>
-                <Link
-                  href="/login"
-                  className="bg-primary hover:bg-secondary text-white px-6 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:shadow-lg transform hover:-translate-y-0.5"
-                >
-                  Iniciar Sesión
-                </Link>
+                {userAuth.isLoggedIn ? (
+                  <Link
+                    href="/perfil"
+                    className="bg-primary hover:bg-secondary text-white px-6 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:shadow-lg transform hover:-translate-y-0.5 flex items-center"
+                  >
+                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                    {userAuth.user?.nombre || 'Mi Perfil'}
+                  </Link>
+                ) : (
+                  <Link
+                    href="/login"
+                    className="bg-primary hover:bg-secondary text-white px-6 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:shadow-lg transform hover:-translate-y-0.5"
+                  >
+                    Iniciar Sesión
+                  </Link>
+                )}
               </div>
             </nav>
           </div>

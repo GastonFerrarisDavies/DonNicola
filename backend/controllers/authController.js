@@ -1,35 +1,32 @@
-const db = require('../models'); // Importa tus modelos
-const jwt = require('jsonwebtoken'); // Para generar JWTs
-const bcrypt = require('bcryptjs'); // Para comparar contraseñas
+const db = require('../models'); 
+const jwt = require('jsonwebtoken'); 
+const bcrypt = require('bcryptjs');
+
+// Configurar JWT_SECRET por defecto si no está definido
+const JWT_SECRET = process.env.JWT_SECRET || 'tu_jwt_secret_super_seguro_para_desarrollo'; 
 
 exports.login = async (req, res) => {
     const { email, password } = req.body;
 
     try {
-        // 1. Buscar el usuario por email
         const user = await db.Usuario.findOne({ where: { email } });
         if (!user) {
             return res.status(400).json({ message: 'Credenciales inválidas.' });
         }
 
-        // 2. Comparar la contraseña proporcionada con la hasheada en la DB
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
             return res.status(400).json({ message: 'Credenciales inválidas.' });
         }
 
-        // 3. Generar un JSON Web Token (JWT)
-        // El payload del token debe contener información que identifique al usuario (ej. id, email, rol)
         const payload = {
             id: user.id,
             email: user.email,
-            rol: user.rol // Incluye el rol para autorización en el frontend/middleware
+            rol: user.rol 
         };
 
-        // Firma el token con tu secreto y una fecha de expiración
-        const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' }); // Token expira en 1 hora
+        const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '30m' }); 
 
-        // 4. Enviar el token y la información del usuario (sin la contraseña)
         res.json({
             message: 'Inicio de sesión exitoso',
             token,
@@ -46,28 +43,23 @@ exports.login = async (req, res) => {
     }
 };
 
-// Puedes añadir una función de registro (register) aquí también si lo deseas
 exports.register = async (req, res) => {
-    const { email, password, rol } = req.body; // Asegúrate de que 'rol' se envía o se asigna por defecto
+    const { email, password, rol } = req.body; 
 
     try {
-        // Validación básica
         if (!email || !password || !rol) {
             return res.status(400).json({ message: 'Email, contraseña y rol son obligatorios.' });
         }
 
-        // Verificar si el usuario ya existe
         const existingUser = await db.Usuario.findOne({ where: { email } });
         if (existingUser) {
             return res.status(409).json({ message: 'El email ya está registrado.' });
         }
 
-        // Crear el nuevo usuario (el hook beforeCreate se encargará del hasheo)
         const newUser = await db.Usuario.create({ email, password, rol });
 
-        // Opcional: Generar un token de inmediato para el nuevo usuario
         const payload = { id: newUser.id, email: newUser.email, rol: newUser.rol };
-        const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
+        const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '1h' });
 
         res.status(201).json({
             message: 'Usuario registrado exitosamente',
@@ -84,5 +76,14 @@ exports.register = async (req, res) => {
             return res.status(400).json({ message: 'Error de validación', errors: error.errors.map(e => e.message) });
         }
         res.status(500).json({ message: 'Error interno del servidor al registrar usuario.', error: error.message });
+    }
+};
+
+exports.getAllUsers = async (req, res) => {
+    try {
+        const users = await db.Usuario.findAll();
+        res.json(users);
+    } catch (error) {
+        res.status(500).json({ message: 'Error al obtener usuarios.', error: error.message });
     }
 };

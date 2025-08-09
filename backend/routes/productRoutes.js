@@ -11,8 +11,8 @@ router.get('/test', (req, res) => {
 //Rutas de Productos
 router.get('/', productController.getAllProducts);
 router.get('/:id', productController.getProductById);
-router.post('/', authMiddleware.verifyToken, productController.createProduct); // Temporalmente sin autenticación para pruebas
-router.put('/:id', authMiddleware.verifyToken, productController.updateProduct); // Temporalmente sin autenticación para pruebas
-router.delete('/:id', authMiddleware.verifyToken, productController.deleteProduct); // Temporalmente sin autenticación para pruebas
+router.post('/', authMiddleware.verifyToken, productController.createProduct);
+router.put('/:id', authMiddleware.verifyToken, productController.updateProduct);
+router.delete('/:id', authMiddleware.verifyToken, productController.deleteProduct); 
 
 module.exports = router;

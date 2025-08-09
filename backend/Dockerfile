@@ -13,8 +13,8 @@ RUN npm install
 # Copiar el código fuente
 COPY . .
 
-# Exponer el puerto 3001 (puerto típico para backend)
-EXPOSE 3001
+# Exponer el puerto 8080 (puerto típico para backend)
+EXPOSE 8080
 
 # Comando para ejecutar las migraciones y luego el servidor
 CMD ["npm", "start"]

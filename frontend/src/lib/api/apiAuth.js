@@ -1,14 +1,8 @@
 //frontend/src/lib/api/auth.js
+import { jwtDecode } from 'jwt-decode';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api';
 
-/**
- * Realiza una petición fetch genérica a la API.
- * @param {string} endpoint - La ruta específica de la API (ej. '/auth/login').
- * @param {object} options - Opciones para la petición fetch (method, headers, body, etc.).
- * @returns {Promise<any>} - La respuesta parseada como JSON.
- * @throws {Error} - Si la respuesta no es exitosa.
- */
 const apiRequest = async (endpoint, options = {}) => {
   const url = `${API_BASE_URL}${endpoint}`;
   
@@ -16,7 +10,6 @@ const apiRequest = async (endpoint, options = {}) => {
     'Content-Type': 'application/json',
   };
 
-  // Agregar token de autorización si existe
   const token = localStorage.getItem('authToken');
   if (token) {
     defaultHeaders['Authorization'] = `Bearer ${token}`;
@@ -45,12 +38,6 @@ const apiRequest = async (endpoint, options = {}) => {
   }
 };
 
-/**
- * Inicia sesión de un usuario.
- * @param {string} email - Email del usuario.
- * @param {string} password - Contraseña del usuario.
- * @returns {Promise<object>} - Datos del usuario y token de acceso.
- */
 export const login = async (email, password) => {
   try {
     const response = await apiRequest('/auth/login', {
@@ -62,6 +49,13 @@ export const login = async (email, password) => {
     if (response.token) {
       localStorage.setItem('authToken', response.token);
       localStorage.setItem('userData', JSON.stringify(response.user));
+      
+      // Disparar evento personalizado para notificar cambios de autenticación
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('authChange', { 
+          detail: { isAuthenticated: true, user: response.user } 
+        }));
+      }
     }
 
     return response;
@@ -70,15 +64,6 @@ export const login = async (email, password) => {
   }
 };
 
-/**
- * Registra un nuevo usuario.
- * @param {object} userData - Datos del usuario a registrar.
- * @param {string} userData.nombre - Nombre del usuario.
- * @param {string} userData.apellido - Apellido del usuario.
- * @param {string} userData.email - Email del usuario.
- * @param {string} userData.password - Contraseña del usuario.
- * @returns {Promise<object>} - Datos del usuario creado y token de acceso.
- */
 export const register = async (userData) => {
   try {
     const response = await apiRequest('/auth/register', {
@@ -98,47 +83,58 @@ export const register = async (userData) => {
   }
 };
 
-/**
- * Cierra la sesión del usuario actual.
- */
 export const logout = () => {
   localStorage.removeItem('authToken');
   localStorage.removeItem('userData');
+  
+  // Disparar evento personalizado para notificar cambios de autenticación
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent('authChange', { 
+      detail: { isAuthenticated: false, user: null } 
+    }));
+  }
+  
   // Redirigir al login
   window.location.href = '/login';
 };
 
-/**
- * Verifica si el usuario está autenticado.
- * @returns {boolean} - True si el usuario está autenticado.
- */
 export const isAuthenticated = () => {
+  if (typeof window === 'undefined') return false; // SSR safety
+  
   const token = localStorage.getItem('authToken');
-  return !!token;
+  if (!token) return false;
+
+  try {
+    // Verificar si el token es válido y no ha expirado
+    const decodedToken = jwtDecode(token);
+    const currentTime = Date.now() / 1000;
+    
+    // Verificar si el token no ha expirado
+    if (decodedToken.exp && decodedToken.exp > currentTime) {
+      return true;
+    } else {
+      // Token expirado, limpiar localStorage
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('userData');
+      return false;
+    }
+  } catch (error) {
+    // Token inválido, limpiar localStorage
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('userData');
+    return false;
+  }
 };
 
-/**
- * Obtiene los datos del usuario actual.
- * @returns {object|null} - Datos del usuario o null si no está autenticado.
- */
 export const getCurrentUser = () => {
   const userData = localStorage.getItem('userData');
   return userData ? JSON.parse(userData) : null;
 };
 
-/**
- * Obtiene el token de autenticación actual.
- * @returns {string|null} - Token de autenticación o null si no existe.
- */
 export const getAuthToken = () => {
   return localStorage.getItem('authToken');
 };
 
-/**
- * Solicita el restablecimiento de contraseña.
- * @param {string} email - Email del usuario.
- * @returns {Promise<object>} - Respuesta del servidor.
- */
 export const requestPasswordReset = async (email) => {
   try {
     const response = await apiRequest('/auth/forgot-password', {
@@ -152,12 +148,6 @@ export const requestPasswordReset = async (email) => {
   }
 };
 
-/**
- * Restablece la contraseña con un token.
- * @param {string} token - Token de restablecimiento.
- * @param {string} newPassword - Nueva contraseña.
- * @returns {Promise<object>} - Respuesta del servidor.
- */
 export const resetPassword = async (token, newPassword) => {
   try {
     const response = await apiRequest('/auth/reset-password', {
@@ -171,12 +161,6 @@ export const resetPassword = async (token, newPassword) => {
   }
 };
 
-/**
- * Cambia la contraseña del usuario autenticado.
- * @param {string} currentPassword - Contraseña actual.
- * @param {string} newPassword - Nueva contraseña.
- * @returns {Promise<object>} - Respuesta del servidor.
- */
 export const changePassword = async (currentPassword, newPassword) => {
   try {
     const response = await apiRequest('/auth/change-password', {
@@ -190,11 +174,6 @@ export const changePassword = async (currentPassword, newPassword) => {
   }
 };
 
-/**
- * Actualiza el perfil del usuario.
- * @param {object} userData - Datos del usuario a actualizar.
- * @returns {Promise<object>} - Datos del usuario actualizados.
- */
 export const updateProfile = async (userData) => {
   try {
     const response = await apiRequest('/auth/profile', {
@@ -213,10 +192,6 @@ export const updateProfile = async (userData) => {
   }
 };
 
-/**
- * Verifica si el token actual es válido.
- * @returns {Promise<boolean>} - True si el token es válido.
- */
 export const verifyToken = async () => {
   try {
     await apiRequest('/auth/verify');
@@ -228,10 +203,6 @@ export const verifyToken = async () => {
   }
 };
 
-/**
- * Refresca el token de autenticación.
- * @returns {Promise<object>} - Nuevo token de acceso.
- */
 export const refreshToken = async () => {
   try {
     const response = await apiRequest('/auth/refresh', {
@@ -248,10 +219,6 @@ export const refreshToken = async () => {
   }
 };
 
-/**
- * Hook personalizado para manejar la autenticación.
- * @returns {object} - Funciones y estado de autenticación.
- */
 export const useAuth = () => {
   const loginUser = async (email, password) => {
     try {

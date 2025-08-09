@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { login } from '@/lib/api/apiAuth';
 
 export default function LoginPage() {
   const [formData, setFormData] = useState({
@@ -57,15 +58,21 @@ export default function LoginPage() {
     setIsLoading(true);
     
     try {
-      // Aquí iría la lógica de autenticación con tu API
-      // Por ahora simulamos un delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Llamar a la API de login real
+      const response = await login(formData.email, formData.password);
       
-      // Redirigir al dashboard después del login exitoso
-      router.push('/dashboard');
+      if (response.token && response.user) {
+        // El token y los datos del usuario ya se guardan en localStorage dentro de la función login
+        console.log('Login exitoso:', response.user);
+        
+        // Redirigir al dashboard después del login exitoso
+        router.push('/dashboard');
+      } else {
+        throw new Error('Respuesta de login inválida');
+      }
     } catch (error) {
       console.error('Error en el login:', error);
-      setErrors({ general: 'Error al iniciar sesión. Inténtalo de nuevo.' });
+      setErrors({ general: error.message || 'Error al iniciar sesión. Inténtalo de nuevo.' });
     } finally {
       setIsLoading(false);
     }

@@ -3,14 +3,17 @@ const cors = require('cors');
 const db = require('./models');
 const port = process.env.PORT || 8080;
 const app = express();
+const dotenv = require('dotenv');
+dotenv.config();
 
 //Configurar Middlewares
-app.use(cors({origin: process.env.FRONTEND_URL || 'http://localhost:8080', credentials: true}));
+app.use(cors({origin: process.env.FRONTEND_URL || 'http://localhost:3000', credentials: true}));
 app.use(express.json());
 
 //Ruta Home
 app.get('/', (req, res) => {
     res.json({message: 'Bienvenido a Don Nicola'});
+
 });
 
 //Importar Rutas
@@ -35,12 +38,10 @@ app.use('/api/lotes', loteRoutes);
 app.use('/api/objetivos', objetivoRoutes);
 app.use('/api/auth', authRoutes);
 
-//Middleware 404 - debe ir al final
 app.use((req, res) => {
     res.status(404).json({ message: 'Ruta no encontrada.'});
 });
 
-//Conectar Base de Datos e Iniciar Servidor
 db.sequelize.authenticate()
     .then(() => {
         console.log('Base de Datos Conectada');
@@ -53,7 +54,6 @@ db.sequelize.authenticate()
         process.exit(1);
     });
 
-//Cierre
 process.on('SIGINT', () => {
     db.sequelize.close()
         .then(() => {
