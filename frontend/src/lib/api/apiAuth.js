@@ -1,53 +1,49 @@
 //frontend/src/lib/api/auth.js
 import { jwtDecode } from 'jwt-decode';
+import { apiFetch } from './apiUtils';
+import { TOKEN_CONFIG } from '../config/tokenConfig';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api';
+const AUTH_TOKEN_KEY = TOKEN_CONFIG.TOKEN_KEY;
 
-const apiRequest = async (endpoint, options = {}) => {
-  const url = `${API_BASE_URL}${endpoint}`;
-  
-  const defaultHeaders = {
-    'Content-Type': 'application/json',
-  };
+// Guarda el token en localStorage
+export const setAuthToken = (token) => {
+  if (typeof window !== 'undefined') {
+    localStorage.setItem(AUTH_TOKEN_KEY, token);
+  }
+};
 
-  const token = localStorage.getItem('authToken');
+// Elimina el token de localStorage
+export const removeAuthToken = () => {
+  if (typeof window !== 'undefined') {
+    localStorage.removeItem(AUTH_TOKEN_KEY);
+  }
+};
+
+// Decodifica el token para obtener la información del usuario
+export const getDecodedToken = () => {
+  const token = getAuthToken();
   if (token) {
-    defaultHeaders['Authorization'] = `Bearer ${token}`;
-  }
-
-  const config = {
-    ...options,
-    headers: {
-      ...defaultHeaders,
-      ...options.headers,
-    },
-  };
-
-  try {
-    const response = await fetch(url, config);
-    
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || `Error ${response.status}: ${response.statusText}`);
+    try {
+      return jwtDecode(token);
+    } catch (error) {
+      console.error('Error al decodificar el token:', error);
+      removeAuthToken(); // Token inválido, lo eliminamos
+      return null;
     }
-
-    return await response.json();
-  } catch (error) {
-    console.error('Error en petición API:', error);
-    throw error;
   }
+  return null;
 };
 
 export const login = async (email, password) => {
   try {
-    const response = await apiRequest('/auth/login', {
+    const response = await apiFetch('/auth/login', {
       method: 'POST',
       body: JSON.stringify({ email, password }),
     });
 
     // Guardar token en localStorage
     if (response.token) {
-      localStorage.setItem('authToken', response.token);
+      setAuthToken(response.token);
       localStorage.setItem('userData', JSON.stringify(response.user));
       
       // Disparar evento personalizado para notificar cambios de autenticación
@@ -66,14 +62,14 @@ export const login = async (email, password) => {
 
 export const register = async (userData) => {
   try {
-    const response = await apiRequest('/auth/register', {
+    const response = await apiFetch('/auth/register', {
       method: 'POST',
       body: JSON.stringify(userData),
     });
 
     // Guardar token en localStorage
     if (response.token) {
-      localStorage.setItem('authToken', response.token);
+      setAuthToken(response.token);
       localStorage.setItem('userData', JSON.stringify(response.user));
     }
 
@@ -84,7 +80,7 @@ export const register = async (userData) => {
 };
 
 export const logout = () => {
-  localStorage.removeItem('authToken');
+  removeAuthToken();
   localStorage.removeItem('userData');
   
   // Disparar evento personalizado para notificar cambios de autenticación
@@ -101,29 +97,20 @@ export const logout = () => {
 export const isAuthenticated = () => {
   if (typeof window === 'undefined') return false; // SSR safety
   
-  const token = localStorage.getItem('authToken');
-  if (!token) return false;
-
-  try {
-    // Verificar si el token es válido y no ha expirado
-    const decodedToken = jwtDecode(token);
-    const currentTime = Date.now() / 1000;
-    
+  const decodedToken = getDecodedToken();
+  if (decodedToken) {
     // Verificar si el token no ha expirado
+    const currentTime = Date.now() / 1000;
     if (decodedToken.exp && decodedToken.exp > currentTime) {
       return true;
     } else {
       // Token expirado, limpiar localStorage
-      localStorage.removeItem('authToken');
+      removeAuthToken();
       localStorage.removeItem('userData');
       return false;
     }
-  } catch (error) {
-    // Token inválido, limpiar localStorage
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('userData');
-    return false;
   }
+  return false;
 };
 
 export const getCurrentUser = () => {
@@ -132,12 +119,15 @@ export const getCurrentUser = () => {
 };
 
 export const getAuthToken = () => {
-  return localStorage.getItem('authToken');
+  if (typeof window !== 'undefined') {
+    return localStorage.getItem(AUTH_TOKEN_KEY);
+  }
+  return null;
 };
 
 export const requestPasswordReset = async (email) => {
   try {
-    const response = await apiRequest('/auth/forgot-password', {
+    const response = await apiFetch('/auth/forgot-password', {
       method: 'POST',
       body: JSON.stringify({ email }),
     });
@@ -150,7 +140,7 @@ export const requestPasswordReset = async (email) => {
 
 export const resetPassword = async (token, newPassword) => {
   try {
-    const response = await apiRequest('/auth/reset-password', {
+    const response = await apiFetch('/auth/reset-password', {
       method: 'POST',
       body: JSON.stringify({ token, newPassword }),
     });
@@ -163,7 +153,12 @@ export const resetPassword = async (token, newPassword) => {
 
 export const changePassword = async (currentPassword, newPassword) => {
   try {
-    const response = await apiRequest('/auth/change-password', {
+    const userData = getCurrentUser();
+    if (!userData || !userData.id) {
+      throw new Error('Usuario no autenticado');
+    }
+    
+    const response = await apiFetch(`/usuarios/${userData.id}`, {
       method: 'POST',
       body: JSON.stringify({ currentPassword, newPassword }),
     });
@@ -176,7 +171,12 @@ export const changePassword = async (currentPassword, newPassword) => {
 
 export const updateProfile = async (userData) => {
   try {
-    const response = await apiRequest('/auth/profile', {
+    const currentUser = getCurrentUser();
+    if (!currentUser || !currentUser.id) {
+      throw new Error('Usuario no autenticado');
+    }
+    
+    const response = await apiFetch(`/usuarios/${currentUser.id}`, {
       method: 'PUT',
       body: JSON.stringify(userData),
     });
@@ -194,7 +194,7 @@ export const updateProfile = async (userData) => {
 
 export const verifyToken = async () => {
   try {
-    await apiRequest('/auth/verify');
+    await apiFetch('/auth/verify');
     return true;
   } catch (error) {
     // Si el token no es válido, limpiar localStorage
@@ -205,18 +205,100 @@ export const verifyToken = async () => {
 
 export const refreshToken = async () => {
   try {
-    const response = await apiRequest('/auth/refresh', {
+    const response = await apiFetch('/auth/refresh', {
       method: 'POST',
     });
 
     if (response.token) {
-      localStorage.setItem('authToken', response.token);
+      setAuthToken(response.token);
+      // Actualizar también los datos del usuario si vienen en la respuesta
+      if (response.user) {
+        localStorage.setItem('userData', JSON.stringify(response.user));
+      }
+      
+      // Disparar evento personalizado para notificar renovación del token
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('tokenRefreshed', { 
+          detail: { token: response.token, user: response.user } 
+        }));
+      }
     }
 
     return response;
   } catch (error) {
+    console.error('Error al refrescar token:', error);
+    // Si falla la renovación, hacer logout
+    logout();
     throw new Error(error.message || 'Error al refrescar el token');
   }
+};
+
+// Función para verificar si el token necesita renovación
+export const shouldRefreshToken = () => {
+  const decodedToken = getDecodedToken();
+  if (!decodedToken) return false;
+  
+  const currentTime = Date.now() / 1000;
+  const timeUntilExpiry = decodedToken.exp - currentTime;
+  
+  // Renovar si faltan menos de 5 minutos para que expire
+  // O si ya expiró (por seguridad)
+  if (timeUntilExpiry <= 0) {
+    console.log('Token ya expiró, necesita renovación inmediata');
+    return true;
+  }
+  
+  if (timeUntilExpiry < TOKEN_CONFIG.REFRESH_THRESHOLD) {
+    console.log(`Token expira en ${Math.round(timeUntilExpiry / 60)} minutos, renovando...`);
+    return true;
+  }
+  
+  return false;
+};
+
+// Función para renovar el token si es necesario
+export const refreshTokenIfNeeded = async () => {
+  if (shouldRefreshToken()) {
+    try {
+      console.log('Renovando token automáticamente...');
+      await refreshToken();
+      return true;
+    } catch (error) {
+      console.error('Error en renovación automática del token:', error);
+      return false;
+    }
+  }
+  return false;
+};
+
+// Función para configurar la renovación automática del token
+export const setupAutoTokenRefresh = () => {
+  if (typeof window === 'undefined') return;
+  
+  // Verificar cada minuto si el token necesita renovación
+  const checkInterval = setInterval(async () => {
+    if (isAuthenticated()) {
+      await refreshTokenIfNeeded();
+    } else {
+      // Si no está autenticado, limpiar el intervalo
+      clearInterval(checkInterval);
+    }
+  }, TOKEN_CONFIG.CHECK_INTERVAL);
+  
+  // También verificar cuando la página se vuelve visible
+  const handleVisibilityChange = async () => {
+    if (!document.hidden && isAuthenticated()) {
+      await refreshTokenIfNeeded();
+    }
+  };
+  
+  document.addEventListener('visibilitychange', handleVisibilityChange);
+  
+  // Retornar función para limpiar los listeners
+  return () => {
+    clearInterval(checkInterval);
+    document.removeEventListener('visibilitychange', handleVisibilityChange);
+  };
 };
 
 export const useAuth = () => {

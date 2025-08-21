@@ -11,6 +11,7 @@ export default function HomePage() {
     isLoggedIn: false,
     user: null
   });
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     // Verificar el estado de autenticación al cargar la página
@@ -71,10 +72,39 @@ export default function HomePage() {
     };
   }, []);
 
+  // Cerrar menú móvil cuando cambia el tamaño de la ventana
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) { // md breakpoint
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Cerrar menú móvil cuando se hace clic fuera de él
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      const mobileMenu = document.getElementById('mobile-menu');
+      const mobileButton = document.getElementById('mobile-button');
+      
+      if (mobileMenu && mobileButton && !mobileMenu.contains(event.target) && !mobileButton.contains(event.target)) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    if (isMobileMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [isMobileMenuOpen]);
+
   return (
     <div className="min-h-screen bg-tertiary">
       {/* Header */}
-      <header className="bg-white/95 backdrop-blur-sm shadow-lg border-b border-gray-100 sticky top-0 z-50">
+      <header className={`bg-white/95 backdrop-blur-sm shadow-lg border-b border-gray-100 sticky top-0 z-50 relative transition-all duration-300 ${isMobileMenuOpen ? 'backdrop-blur-md' : ''}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
             <div className="flex items-center">
@@ -84,6 +114,8 @@ export default function HomePage() {
                 </h1>
               </div>
             </div>
+            
+            {/* Desktop Navigation */}
             <nav className="hidden md:block">
               <div className="ml-10 flex items-baseline space-x-8">
                 <Link
@@ -130,6 +162,107 @@ export default function HomePage() {
                 )}
               </div>
             </nav>
+
+            {/* Mobile menu button */}
+            <div className="md:hidden">
+              <button
+                id="mobile-button"
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="inline-flex items-center justify-center p-2 rounded-md text-quaternary hover:text-primary hover:bg-tertiary focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary transition-all duration-300"
+                aria-expanded="false"
+              >
+                <span className="sr-only">Abrir menú principal</span>
+                {/* Hamburger icon */}
+                <svg
+                  className={`${isMobileMenuOpen ? 'hidden' : 'block'} h-6 w-6`}
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  aria-hidden="true"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+                {/* Close icon */}
+                <svg
+                  className={`${isMobileMenuOpen ? 'block' : 'hidden'} h-6 w-6`}
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  aria-hidden="true"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          {/* Mobile Navigation Menu */}
+          <div id="mobile-menu" className={`${isMobileMenuOpen ? 'block' : 'hidden'} md:hidden absolute top-full left-0 right-0 z-50`}>
+            {/* Overlay oscuro solo para el header */}
+            <div 
+              className="absolute inset-0 bg-black/30"
+              onClick={() => setIsMobileMenuOpen(false)}
+            ></div>
+            
+            {/* Menú desplegable */}
+            <div className="relative bg-white/95 backdrop-blur-sm rounded-b-lg mx-4 mt-2 shadow-2xl border border-gray-100">
+              <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <Link
+                  href="#inicio"
+                  className="text-quaternary hover:text-primary block px-3 py-2 rounded-md text-base font-medium transition-all duration-300 hover:bg-tertiary"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Inicio
+                </Link>
+                <Link
+                  href="#servicios"
+                  className="text-quaternary hover:text-primary block px-3 py-2 rounded-md text-base font-medium transition-all duration-300 hover:bg-tertiary"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Servicios
+                </Link>
+                <Link
+                  href="#nosotros"
+                  className="text-quaternary hover:text-primary block px-3 py-2 rounded-md text-base font-medium transition-all duration-300 hover:bg-tertiary"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Nosotros
+                </Link>
+                <Link
+                  href="#contacto"
+                  className="text-quaternary hover:text-primary block px-3 py-2 rounded-md text-base font-medium transition-all duration-300 hover:bg-tertiary"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Contacto
+                </Link>
+                <div className="pt-4 border-t border-gray-200">
+                  {userAuth.isLoggedIn ? (
+                    <Link
+                      href="/perfil"
+                      className="bg-primary hover:bg-secondary text-white block w-full text-center px-6 py-3 rounded-lg text-base font-medium transition-all duration-300 hover:shadow-lg transform hover:-translate-y-0.5"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      <div className="flex items-center justify-center">
+                        <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
+                        {userAuth.user?.nombre || 'Mi Perfil'}
+                      </div>
+                    </Link>
+                  ) : (
+                    <Link
+                      href="/login"
+                      className="bg-primary hover:bg-secondary text-white block w-full text-center px-6 py-3 rounded-lg text-base font-medium transition-all duration-300 hover:shadow-lg transform hover:-translate-y-0.5"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      Iniciar Sesión
+                    </Link>
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </header>

@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { User, Mail, Calendar, Shield, ArrowLeft, Edit, Save, X } from 'lucide-react';
+import { User, Mail, Calendar, Shield, ArrowLeft, Edit, Save, X, LogOut } from 'lucide-react';
 import Link from 'next/link';
 import { getCurrentUser, updateProfile, isAuthenticated } from '@/lib/api/apiAuth';
+import { useAuth } from '@/hooks/useAuth';
 
 export default function PerfilPage() {
   const [user, setUser] = useState(null);
@@ -18,6 +19,7 @@ export default function PerfilPage() {
   const [errors, setErrors] = useState({});
   const [saving, setSaving] = useState(false);
   const router = useRouter();
+  const { logout } = useAuth();
 
   useEffect(() => {
     // Verificar autenticación
@@ -358,7 +360,7 @@ export default function PerfilPage() {
           <div className="flex flex-col sm:flex-row gap-4">
             <Link
               href="/dashboard"
-              className="inline-flex items-center px-4 py-2 bg-primary text-white rounded-lg hover:bg-secondary transition-colors duration-200"
+              className="inline-flex items-center px-4 py-2 bg-quaternary text-white rounded-lg hover:bg-quaternary/80 transition-colors duration-200"
             >
               Ir al Dashboard
             </Link>
@@ -368,6 +370,13 @@ export default function PerfilPage() {
             >
               Cambiar contraseña
             </Link>
+            <button
+              onClick={logout}
+              className="cursor-pointer inline-flex items-center px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/80 transition-colors duration-200"
+            >
+              <LogOut className="w-4 h-4 mr-2" />
+              Cerrar Sesión
+            </button>
           </div>
         </div>
       </div>

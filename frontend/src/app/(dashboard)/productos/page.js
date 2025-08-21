@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Package, Upload, Save, ArrowLeft, Eye, Edit, Trash2 } from "lucide-react"
+import { Package, Upload, Save, Edit, Trash2, ArrowLeft } from "lucide-react"
 import Link from "next/link"
 import { createProduct, getAllProducts, updateProduct, deleteProduct } from "@/lib/api/apiProduct"
 
@@ -206,7 +206,7 @@ export default function ProductosPage() {
                     onChange={handleInputChange}
                     required
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Ej: Malbec Reserva 2020"
+                    placeholder="Nombre del producto"
                   />
                 </div>
 
