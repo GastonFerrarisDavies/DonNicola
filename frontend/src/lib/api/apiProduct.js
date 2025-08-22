@@ -48,13 +48,4 @@ export async function deleteProduct(id) {
     });
 }
 
-export async function createLote(loteData) {
-    return apiFetch('/lotes', {
-        method: 'POST',
-        body: JSON.stringify(loteData),
-    });
-}
 
-export async function getAllLotes() {
-    return apiFetch('/lotes');
-}
