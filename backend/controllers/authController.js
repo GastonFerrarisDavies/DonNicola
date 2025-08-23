@@ -1,9 +1,7 @@
 const db = require('../models'); 
 const jwt = require('jsonwebtoken'); 
 const bcrypt = require('bcryptjs');
-
-// Configurar JWT_SECRET por defecto si no está definido
-const JWT_SECRET = process.env.JWT_SECRET || 'tu_jwt_secret_super_seguro_para_desarrollo'; 
+const { JWT_SECRET } = require('../config/jwt'); 
 
 exports.login = async (req, res) => {
     const { email, password } = req.body;

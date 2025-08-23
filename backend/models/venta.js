@@ -15,13 +15,14 @@ module.exports = (sequelize, DataTypes) => {
     clienteId: {
       type: DataTypes.INTEGER,
       references: {
-        model: 'Cliente',
+        model: 'Clientes',
         key: 'id'
       }
     }
   }, {
     sequelize,
     modelName: 'Venta',
+    tableName: 'Ventas', // Especificar explícitamente el nombre de la tabla
   });
   return Venta;
 };

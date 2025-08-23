@@ -19,6 +19,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Usuario',
+    tableName: 'Usuarios', // Especificar explícitamente el nombre de la tabla
     hooks: {
       beforeCreate: async (usuario) => {
         if (usuario.password) {

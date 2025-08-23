@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Sucursal',
+    tableName: 'Sucursales', // Especificar explícitamente el nombre de la tabla
   });
   return Sucursal;
 };

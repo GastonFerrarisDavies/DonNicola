@@ -16,6 +16,10 @@ export async function apiFetch(endpoint, options = {}) {
     let authToken = null;
     if (typeof window !== 'undefined') {
         authToken = localStorage.getItem('authToken');
+        console.log('🔐 Token encontrado:', authToken ? 'SÍ' : 'NO');
+        if (authToken) {
+            console.log('🔑 Token:', authToken.substring(0, 20) + '...');
+        }
     }
     
     const defaultHeaders = {
@@ -25,6 +29,9 @@ export async function apiFetch(endpoint, options = {}) {
     // Agregar el token de autorización si está disponible
     if (authToken) {
         defaultHeaders['Authorization'] = `Bearer ${authToken}`;
+        console.log('📤 Enviando header Authorization:', `Bearer ${authToken.substring(0, 20)}...`);
+    } else {
+        console.log('⚠️ No se envió header Authorization - Token no encontrado');
     }
 
     const config = {
@@ -35,12 +42,18 @@ export async function apiFetch(endpoint, options = {}) {
         },
     };
 
+    console.log('🌐 Haciendo petición a:', url);
+    console.log('📋 Configuración:', config);
+
     try {
         const response = await fetch(url, config);
+
+        console.log('📥 Respuesta recibida:', response.status, response.statusText);
 
         if (!response.ok) {
             // Intenta parsear el error del backend si es JSON
             const errorData = await response.json().catch(() => ({ message: 'Error desconocido del servidor.' }));
+            console.error('❌ Error en la petición:', errorData);
             throw new Error(errorData.message || `Error en la petición: ${response.status} ${response.statusText}`);
         }
 
@@ -49,9 +62,11 @@ export async function apiFetch(endpoint, options = {}) {
             return null;
         }
 
-        return await response.json();
+        const data = await response.json();
+        console.log('✅ Datos recibidos:', data);
+        return data;
     } catch (error) {
-        console.error(`Error en apiFetch para ${url}:`, error);
+        console.error(`❌ Error en apiFetch para ${url}:`, error);
         throw error; // Re-lanza el error para que el componente lo maneje
     }
 }

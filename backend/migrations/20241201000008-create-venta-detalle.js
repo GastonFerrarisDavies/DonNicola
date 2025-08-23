@@ -14,12 +14,8 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false
       },
-      fechaCaducidad: {
-        type: Sequelize.DATE,
-        allowNull: false
-      },
-      fechaProduccion: {
-        type: Sequelize.DATE,
+      subtotal: {
+        type: Sequelize.DECIMAL(10, 2),
         allowNull: false
       },
       ventaId: {

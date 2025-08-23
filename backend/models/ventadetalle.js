@@ -15,20 +15,21 @@ module.exports = (sequelize, DataTypes) => {
     ventaId: {
       type: DataTypes.INTEGER,
       references: {
-        model: 'Venta',
+        model: 'Ventas',
         key: 'id'
       }
     },
     productoId: {
       type: DataTypes.INTEGER,
       references: {
-        model: 'Producto',
+        model: 'Productos',
         key: 'id'
       }
     }
   }, {
     sequelize,
     modelName: 'VentaDetalle',
+    tableName: 'VentaDetalles', // Especificar explícitamente el nombre de la tabla
   });
   return VentaDetalle;
 };

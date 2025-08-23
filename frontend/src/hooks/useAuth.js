@@ -3,8 +3,7 @@
 
 import { useState, useEffect, createContext, useContext } from 'react';
 import { useRouter } from 'next/navigation';
-import { getAuthToken, setAuthToken, removeAuthToken, isAuthenticated, getDecodedToken } from '@/lib/api/apiAuth';
-import { login } from '@/lib/api/apiAuth';
+import { getAuthToken, setAuthToken, removeAuthToken, isAuthenticated, getDecodedToken, login as loginUser } from '@/lib/api/apiAuth';
 
 // Crear un contexto de autenticación
 const AuthContext = createContext(null);
@@ -27,9 +26,8 @@ export function AuthProvider({ children }) {
   const login = async (email, password) => {
     setLoading(true);
     try {
-      const { token, user: userData } = await loginUser(email, password);
-      setAuthToken(token);
-      setUser(userData); // Guarda la información del usuario
+      const response = await loginUser(email, password);
+      setUser(response.user); // Guarda la información del usuario
       router.push('/dashboard'); // Redirige al dashboard
       return true;
     } catch (error) {

@@ -16,13 +16,14 @@ module.exports = (sequelize, DataTypes) => {
     usuarioId: {
       type: DataTypes.INTEGER,
       references: {
-        model: 'Usuario',
+        model: 'Usuarios',
         key: 'id'
       }
     }
   }, {
     sequelize,
     modelName: 'Objetivo',
+    tableName: 'Objetivos', // Especificar explícitamente el nombre de la tabla
   });
   return Objetivo;
 };
