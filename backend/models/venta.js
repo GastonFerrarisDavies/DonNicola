@@ -12,6 +12,13 @@ module.exports = (sequelize, DataTypes) => {
   Venta.init({
     fecha: DataTypes.DATE,
     total: DataTypes.DECIMAL(10, 2),
+    sucursalId: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: 'Sucursales',
+        key: 'id'
+      }
+    },
     clienteId: {
       type: DataTypes.INTEGER,
       references: {
