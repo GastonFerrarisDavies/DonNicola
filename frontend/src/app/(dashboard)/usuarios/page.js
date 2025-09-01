@@ -238,21 +238,6 @@ export default function UsuariosPage() {
                     ))}
                   </select>
                 </div>
-
-                {/* Teléfono */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Teléfono
-                  </label>
-                  <input
-                    type="tel"
-                    name="telefono"
-                    value={formData.telefono}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="+54 9 2355 000000"
-                  />
-                </div>
               </div>
 
               {/* Botones */}
@@ -315,16 +300,10 @@ export default function UsuariosPage() {
                 <thead className="bg-gray-50">
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Usuario
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Email
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Rol
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Estado
                     </th>
                     <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Acciones
@@ -334,23 +313,6 @@ export default function UsuariosPage() {
                 <tbody className="bg-white divide-y divide-gray-200">
                   {usuarios.map((usuario) => (
                     <tr key={usuario.id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex items-center">
-                          <div className="flex-shrink-0 h-10 w-10">
-                            <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
-                              <Users className="w-5 h-5 text-gray-400" />
-                            </div>
-                          </div>
-                          <div className="ml-4">
-                            <div className="text-sm font-medium text-gray-900">
-                              {usuario.nombre}
-                            </div>
-                            <div className="text-sm text-gray-500">
-                              {usuario.telefono || "Sin teléfono"}
-                            </div>
-                          </div>
-                        </div>
-                      </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                         {usuario.email}
                       </td>
@@ -359,21 +321,7 @@ export default function UsuariosPage() {
                           {getRolDisplayName(usuario.rol)}
                         </span>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex items-center">
-                          {usuario.activo ? (
-                            <>
-                              <UserCheck className="w-4 h-4 text-green-500 mr-2" />
-                              <span className="text-sm text-green-600">Activo</span>
-                            </>
-                          ) : (
-                            <>
-                              <UserX className="w-4 h-4 text-red-500 mr-2" />
-                              <span className="text-sm text-red-600">Inactivo</span>
-                            </>
-                          )}
-                        </div>
-                      </td>
+                    
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <div className="flex justify-end space-x-2">
                           <button

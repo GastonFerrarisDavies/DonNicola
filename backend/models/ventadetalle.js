@@ -7,6 +7,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       VentaDetalle.belongsTo(models.Venta, { foreignKey: 'ventaId' });
       VentaDetalle.belongsTo(models.Producto, { foreignKey: 'productoId' });
+      VentaDetalle.belongsTo(models.Lote, { foreignKey: 'loteId' })
     }
   }
   VentaDetalle.init({
@@ -16,6 +17,13 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       references: {
         model: 'Ventas',
+        key: 'id'
+      }
+    },
+    loteId: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: 'Lotes',
         key: 'id'
       }
     },
