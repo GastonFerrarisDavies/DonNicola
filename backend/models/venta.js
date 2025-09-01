@@ -2,11 +2,12 @@
 const {
   Model
 } = require('sequelize');
-module.exports = (sequelize, DataTypes) => {
+module.exports = function(sequelize, DataTypes) {
   class Venta extends Model {
     static associate(models) {
-      Venta.belongsTo(models.Cliente, { foreignKey: 'clienteId' });
-      Venta.hasMany(models.VentaDetalle, { foreignKey: 'ventaId' });
+      Venta.belongsTo(models.Cliente, { foreignKey: 'clienteId', as: 'Cliente' });
+      Venta.belongsTo(models.Sucursal, { foreignKey: 'sucursalId', as: 'Sucursal' });
+      Venta.hasMany(models.VentaDetalle, { foreignKey: 'ventaId', as: 'VentaDetalle' });
     }
   }
   Venta.init({

@@ -2,7 +2,7 @@
 const {
   Model
 } = require('sequelize');
-module.exports = (sequelize, DataTypes) => {
+module.exports = function(sequelize, DataTypes) {
   class Tipo extends Model {
   }
   Tipo.init({

@@ -2,7 +2,7 @@ const db = require('../models');
 
 exports.getAllVentaDetalles = async (req, res) => {
     try {
-        const ventaDetalles = await db.VentaDetalle.findAll({
+        const ventaDetalles = await db.VentaDetalles.findAll({
             include: [
                 { model: db.Venta, as: 'Venta' },
                 { model: db.Producto, as: 'Producto' }

@@ -4,7 +4,15 @@
     "password": "password",
     "database": "donicola",
     "host": "db",
-    "dialect": "mysql"
+    "port": 3306,
+    "dialect": "mysql",
+    "logging": false,
+    "pool": {
+      "max": 5,
+      "min": 0,
+      "acquire": 30000,
+      "idle": 10000
+    }
   },
   "test": {
     "username": "root",

@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 const bcrypt = require('bcryptjs');
-module.exports = (sequelize, DataTypes) => {
+module.exports = function(sequelize, DataTypes) {
   class Usuario extends Model {
     static associate(models) {
       Usuario.hasMany(models.Objetivo, { foreignKey: 'usuarioId' });
@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
     modelName: 'Usuario',
     tableName: 'Usuarios', // Especificar explícitamente el nombre de la tabla
     hooks: {
-      beforeCreate: async (usuario) => {
+      beforeCreate: async function(usuario) {
         if (usuario.password) {
           const salt = await bcrypt.genSalt(10);
           usuario.password = await bcrypt.hash(usuario.password, salt);
