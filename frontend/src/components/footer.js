@@ -6,16 +6,17 @@ export default function Footer() {
     const [year, setYear] = useState(new Date().getFullYear());
 
     return (
-        <footer className="bg-gray-800 text-white py-12">
+        <footer id="contacto" className="bg-gray-800 text-white py-12">
         <div className="flex flex-col px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-row justify-around">
-            <div>
+          <div className="flex flex-row justify-around items-start">
+            <div className="flex-1">
               <h3 className="text-lg font-semibold mb-4">Don Nicola</h3>
               <p className="text-gray-400">
                 La pasión por la calidad y nuestra tradición familiar.
               </p>
             </div>
-            <div>
+            <div className="w-px h-16 bg-gray-600 mx-8 self-center"></div>
+            <div className="flex-1">
               <h4 className="text-lg font-semibold mb-4">Contacto</h4>
               <ul className="space-y-2 text-gray-400">
                 <li>donnicola@gmail.com</li>
