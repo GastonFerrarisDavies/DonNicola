@@ -1,8 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { login } from '@/lib/api/apiAuth';
+import { useAuth } from '@/hooks/useAuth';
 
 export default function LoginPage() {
   const [formData, setFormData] = useState({
@@ -12,7 +11,7 @@ export default function LoginPage() {
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const router = useRouter();
+  const { login } = useAuth();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -58,18 +57,9 @@ export default function LoginPage() {
     setIsLoading(true);
     
     try {
-      // Llamar a la API de login real
-      const response = await login(formData.email, formData.password);
-      
-      if (response.token && response.user) {
-        // El token y los datos del usuario ya se guardan en localStorage dentro de la función login
-        console.log('Login exitoso:', response.user);
-        
-        // Redirigir al dashboard después del login exitoso
-        router.push('/dashboard');
-      } else {
-        throw new Error('Respuesta de login inválida');
-      }
+      // Usar el hook de autenticación que maneja la redirección automáticamente
+      await login(formData.email, formData.password);
+      console.log('Login exitoso');
     } catch (error) {
       console.error('Error en el login:', error);
       setErrors({ general: error.message || 'Error al iniciar sesión. Inténtalo de nuevo.' });

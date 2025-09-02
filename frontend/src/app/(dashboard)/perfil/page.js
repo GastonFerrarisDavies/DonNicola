@@ -12,9 +12,8 @@ export default function PerfilPage() {
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
-    nombre: '',
-    apellido: '',
-    email: ''
+    email: '',
+    createdAt: ''
   });
   const [errors, setErrors] = useState({});
   const [saving, setSaving] = useState(false);
@@ -38,9 +37,8 @@ export default function PerfilPage() {
       if (userData) {
         setUser(userData);
         setFormData({
-          nombre: userData.nombre || '',
-          apellido: userData.apellido || '',
-          email: userData.email || ''
+          email: userData.email || '',
+          createdAt: userData.createdAt
         });
       }
     } catch (error) {
@@ -68,14 +66,6 @@ export default function PerfilPage() {
 
   const validateForm = () => {
     const newErrors = {};
-
-    if (!formData.nombre.trim()) {
-      newErrors.nombre = 'El nombre es requerido';
-    }
-
-    if (!formData.apellido.trim()) {
-      newErrors.apellido = 'El apellido es requerido';
-    }
 
     if (!formData.email.trim()) {
       newErrors.email = 'El correo electrónico es requerido';
@@ -107,8 +97,6 @@ export default function PerfilPage() {
 
   const handleCancel = () => {
     setFormData({
-      nombre: user?.nombre || '',
-      apellido: user?.apellido || '',
       email: user?.email || ''
     });
     setErrors({});
@@ -158,9 +146,6 @@ export default function PerfilPage() {
                   <User className="w-10 h-10 text-white" />
                 </div>
                 <div className="ml-6">
-                  <h2 className="text-2xl font-bold text-white">
-                    {user?.nombre} {user?.apellido}
-                  </h2>
                   <p className="text-white/80 text-lg">{user?.email}</p>
                 </div>
               </div>
@@ -192,63 +177,6 @@ export default function PerfilPage() {
                 </h3>
 
                 <div className="space-y-4">
-                  {/* Nombre */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Nombre
-                    </label>
-                    {isEditing ? (
-                      <div>
-                        <input
-                          type="text"
-                          name="nombre"
-                          value={formData.nombre}
-                          onChange={handleInputChange}
-                          className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent ${
-                            errors.nombre ? 'border-red-300' : 'border-gray-300'
-                          }`}
-                          placeholder="Ingresa tu nombre"
-                        />
-                        {errors.nombre && (
-                          <p className="text-red-500 text-sm mt-1">{errors.nombre}</p>
-                        )}
-                      </div>
-                    ) : (
-                      <div className="flex items-center text-gray-900">
-                        <User className="w-4 h-4 mr-2 text-gray-500" />
-                        {user?.nombre || 'No especificado'}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Apellido */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Apellido
-                    </label>
-                    {isEditing ? (
-                      <div>
-                        <input
-                          type="text"
-                          name="apellido"
-                          value={formData.apellido}
-                          onChange={handleInputChange}
-                          className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent ${
-                            errors.apellido ? 'border-red-300' : 'border-gray-300'
-                          }`}
-                          placeholder="Ingresa tu apellido"
-                        />
-                        {errors.apellido && (
-                          <p className="text-red-500 text-sm mt-1">{errors.apellido}</p>
-                        )}
-                      </div>
-                    ) : (
-                      <div className="flex items-center text-gray-900">
-                        <User className="w-4 h-4 mr-2 text-gray-500" />
-                        {user?.apellido || 'No especificado'}
-                      </div>
-                    )}
-                  </div>
 
                   {/* Email */}
                   <div>

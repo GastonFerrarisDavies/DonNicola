@@ -50,6 +50,12 @@ export const login = async (email, password) => {
         window.dispatchEvent(new CustomEvent('authChange', { 
           detail: { isAuthenticated: true, user: response.user } 
         }));
+        // También disparar un evento de storage para compatibilidad
+        window.dispatchEvent(new StorageEvent('storage', {
+          key: 'authToken',
+          newValue: response.token,
+          url: window.location.href
+        }));
       }
     }
 

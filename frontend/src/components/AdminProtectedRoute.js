@@ -21,6 +21,11 @@ export default function AdminProtectedRoute({ children }) {
         return;
       }
 
+      // Si no hay usuario, esperar un poco más
+      if (!user) {
+        return;
+      }
+
       // Verificar con el backend si el usuario es admin
       try {
         const isAdmin = await verifyAdmin();

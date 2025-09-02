@@ -9,11 +9,9 @@ router.get('/test', (req, res) => {
 });
 
 //Rutas de Productos
-// Lectura - Acceso para usuarios autenticados
-router.get('/', authMiddleware.verifyToken, productController.getAllProducts);
+router.get('/', productController.getAllProducts);
 router.get('/:id', authMiddleware.verifyToken, productController.getProductById);
 
-// Operaciones de escritura - Solo administradores
 router.post('/', authMiddleware.verifyToken, authMiddleware.isAdmin, productController.createProduct);
 router.put('/:id', authMiddleware.verifyToken, authMiddleware.isAdmin, productController.updateProduct);
 router.delete('/:id', authMiddleware.verifyToken, authMiddleware.isAdmin, productController.deleteProduct);

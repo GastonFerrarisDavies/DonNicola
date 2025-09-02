@@ -2,7 +2,8 @@
 import { useState, useEffect } from "react"
 import { getAllProducts } from "@/lib/api/apiProduct"
 import Footer from "@/components/footer.js"
-import { Drum, Drumstick, Pizza } from 'lucide-react'
+import { Drum, Drumstick, Pizza, Home, ArrowLeft } from 'lucide-react'
+import Link from 'next/link'
 
 export default function ProductosPage() {
   const [products, setProducts] = useState([])
@@ -111,6 +112,29 @@ export default function ProductosPage() {
 
   return (
     <div className="min-h-screen bg-tertiary">
+      {/* Minimalist Navbar */}
+      <nav className="bg-white/95 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            <Link 
+              href="/" 
+              className="flex items-center gap-2 text-gray-700 hover:text-primary transition-colors duration-300 group"
+            >
+              <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform duration-300" />
+              <span className="font-medium">Volver al inicio</span>
+            </Link>
+            
+            <Link 
+              href="/" 
+              className="flex items-center gap-2 text-primary hover:text-secondary transition-colors duration-300"
+            >
+              <Home className="w-5 h-5" />
+              <span className="font-semibold">Don Nicola</span>
+            </Link>
+          </div>
+        </div>
+      </nav>
+
       {/* Header Section */}
       <section className="bg-gradient-to-br from-primary via-secondary to-quinary text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -172,7 +196,7 @@ export default function ProductosPage() {
                 onClick={() => setSelectedFilter('embutido')}
                 className={`px-6 py-3 rounded-lg font-medium transition-all duration-300 flex items-center gap-2 ${
                   selectedFilter === 'embutido'
-                    ? 'bg-red-500 text-white shadow-lg'
+                    ? 'bg-blue-500 text-white shadow-lg'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }`}
               >
@@ -264,17 +288,14 @@ export default function ProductosPage() {
       <section className="py-16 bg-gradient-to-br from-quaternary to-quinary text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-6">
-            ¿No encuentras lo que buscas?
+            ¿No encontrás lo que buscás?
           </h2>
           <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
             Contáctanos directamente para consultas especiales o pedidos personalizados
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="bg-white hover:bg-gray-100 text-primary px-8 py-3 rounded-lg font-medium transition-all duration-300 transform hover:-translate-y-1">
+            <button className="cursor-pointer bg-white hover:bg-gray-100 text-primary px-8 py-3 rounded-lg font-medium transition-all duration-300 transform hover:-translate-y-1">
               Contactar por WhatsApp
-            </button>
-            <button className="border-2 border-white text-white hover:bg-white hover:text-primary px-8 py-3 rounded-lg font-medium transition-all duration-300 transform hover:-translate-y-1">
-              Visitar sucursal
             </button>
           </div>
         </div>

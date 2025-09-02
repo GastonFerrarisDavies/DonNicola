@@ -28,7 +28,12 @@ export function AuthProvider({ children }) {
     try {
       const response = await loginUser(email, password);
       setUser(response.user); // Guarda la información del usuario
-      router.push('/dashboard'); // Redirige al dashboard
+      
+      // Usar setTimeout para asegurar que el estado se actualice antes de la redirección
+      setTimeout(() => {
+        router.push('/dashboard'); // Redirige al dashboard
+      }, 100);
+      
       return true;
     } catch (error) {
       console.error('Login failed:', error);
@@ -49,7 +54,7 @@ export function AuthProvider({ children }) {
   // El valor que se proveerá a los consumidores del contexto
   const authContextValue = {
     user,
-    isAuthenticated: isAuthenticated(), // Calcula el estado de autenticación
+    isAuthenticated: !!user, // Usar el estado del usuario en lugar de la función
     loading,
     login,
     logout,
