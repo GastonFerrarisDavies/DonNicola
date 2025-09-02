@@ -202,6 +202,15 @@ export const verifyToken = async () => {
   }
 };
 
+export const verifyAdmin = async () => {
+  try {
+    const response = await apiFetch('/auth/verify-admin');
+    return response.isAdmin;
+  } catch (error) {
+    return false;
+  }
+};
+
 export const refreshToken = async () => {
   try {
     const response = await apiFetch('/auth/refresh', {
@@ -274,6 +283,7 @@ export default {
   changePassword,
   updateProfile,
   verifyToken,
+  verifyAdmin,
   refreshToken,
   useAuth,
 };

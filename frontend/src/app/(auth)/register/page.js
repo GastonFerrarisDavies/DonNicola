@@ -6,12 +6,10 @@ import { register } from '@/lib/api/apiAuth';
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
-    nombre: '',
-    apellido: '',
     email: '',
     password: '',
     confirmPassword: '',
-    rol: 'usuario' // Rol por defecto
+    rol: 'usuario'
   });
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
@@ -36,18 +34,6 @@ export default function RegisterPage() {
 
   const validateForm = () => {
     const newErrors = {};
-
-    if (!formData.nombre.trim()) {
-      newErrors.nombre = 'El nombre es requerido';
-    } else if (formData.nombre.trim().length < 2) {
-      newErrors.nombre = 'El nombre debe tener al menos 2 caracteres';
-    }
-
-    if (!formData.apellido.trim()) {
-      newErrors.apellido = 'El apellido es requerido';
-    } else if (formData.apellido.trim().length < 2) {
-      newErrors.apellido = 'El apellido debe tener al menos 2 caracteres';
-    }
 
     if (!formData.email) {
       newErrors.email = 'El correo electrónico es requerido';
@@ -122,49 +108,6 @@ export default function RegisterPage() {
                 {errors.general}
               </div>
             )}
-
-            {/* Campos de nombre y apellido */}
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label htmlFor="nombre" className="block text-sm font-medium text-gray-700 mb-2">
-                  Nombre
-                </label>
-                <input
-                  type="text"
-                  id="nombre"
-                  name="nombre"
-                  value={formData.nombre}
-                  onChange={handleInputChange}
-                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-colors ${
-                    errors.nombre ? 'border-red-300' : 'border-gray-300'
-                  }`}
-                  placeholder="Tu nombre"
-                />
-                {errors.nombre && (
-                  <p className="mt-1 text-sm text-red-600">{errors.nombre}</p>
-                )}
-              </div>
-
-              <div>
-                <label htmlFor="apellido" className="block text-sm font-medium text-gray-700 mb-2">
-                  Apellido
-                </label>
-                <input
-                  type="text"
-                  id="apellido"
-                  name="apellido"
-                  value={formData.apellido}
-                  onChange={handleInputChange}
-                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-colors ${
-                    errors.apellido ? 'border-red-300' : 'border-gray-300'
-                  }`}
-                  placeholder="Tu apellido"
-                />
-                {errors.apellido && (
-                  <p className="mt-1 text-sm text-red-600">{errors.apellido}</p>
-                )}
-              </div>
-            </div>
 
             {/* Campo de email */}
             <div>

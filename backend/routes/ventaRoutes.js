@@ -13,4 +13,4 @@ router.post('/completa', authMiddleware.verifyToken, authMiddleware.isAdmin, ven
 router.put('/:id', authMiddleware.verifyToken, authMiddleware.isAdmin, ventaController.updateVenta);
 router.delete('/:id', authMiddleware.verifyToken, authMiddleware.isAdmin, ventaController.deleteVenta);
 
-module.exports = router; 
+module.exports = router;

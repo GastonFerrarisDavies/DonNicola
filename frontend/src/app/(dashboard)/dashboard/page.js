@@ -92,7 +92,7 @@ export default function Dashboard() {
     return () => clearInterval(interval)
   }, [])
 
-  return (
+    return (
     <div className="min-h-screen bg-gray-50">
       {/* Navbar */}
       <nav className="bg-white shadow-sm border-b border-gray-200">
