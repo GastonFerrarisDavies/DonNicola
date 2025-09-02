@@ -299,10 +299,12 @@ export default function HomePage() {
               Desde nuestras raíces, elaboramos quesos con pasión y el toque artesanal que nos distingue. 
               Cada bocado cuenta una historia de tradición y dedicación.
             </p>
-            <div className="flex flex-col sm:flex-row gap-6 justify-center">
-              <Boton variant="quaternary" size="large" className="shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300">
-                Explora nuestros productos
-              </Boton>
+                         <div className="flex flex-col sm:flex-row gap-6 justify-center">
+               <Link href="/verproductos">
+                 <Boton variant="quaternary" size="large" className="shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300">
+                   Explora nuestros productos
+                 </Boton>
+               </Link>
               <Boton variant="outlineQuaternary" size="large" className="border-white text-white hover:bg-white hover:text-primary shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300">
                 Encuentra tu sucursal
               </Boton>
@@ -567,9 +569,11 @@ export default function HomePage() {
             <Boton variant="outlineSecondary" size="large" className="border-white text-white hover:bg-white hover:text-primary shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300">
               Contáctanos por WhatsApp
             </Boton>
-            <Boton variant="quaternary" size="large" className="shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300">
-              Visita nuestras sucursales
-            </Boton>
+            <Link href="/productos">
+              <Boton variant="quaternary" size="large" className="shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300">
+                Visita nuestras sucursales
+              </Boton>
+            </Link>
           </div>
         </div>
       </section>
