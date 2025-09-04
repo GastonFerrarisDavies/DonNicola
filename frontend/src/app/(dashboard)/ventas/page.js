@@ -191,7 +191,6 @@ export default function VentasPage() {
         try {
             setLoading(true);
             setMessage('');
-
             const ventaData = {
                 clienteId: parseInt(formData.clienteId),
                 sucursalId: parseInt(formData.sucursalId),

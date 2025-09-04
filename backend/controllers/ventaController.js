@@ -102,7 +102,6 @@ exports.createVentaCompleta = async (req, res) => {
         // Crear los detalles de venta y actualizar stock
         for (const producto of productos) {
             const { loteId, productoId, cantidad, precioUnitario, subtotal } = producto;
-
             // Verificar que el lote tenga suficiente stock
             const lote = await db.Lote.findByPk(loteId, { transaction });
             if (!lote) {
@@ -130,6 +129,7 @@ exports.createVentaCompleta = async (req, res) => {
             // Crear el detalle de venta
             await db.VentaDetalle.create({
                 ventaId: venta.id,
+                loteId,
                 productoId,
                 cantidad,
                 subtotal
