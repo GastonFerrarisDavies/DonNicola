@@ -3,7 +3,7 @@
 
 import { useState, useEffect, createContext, useContext } from 'react';
 import { useRouter } from 'next/navigation';
-import { getAuthToken, setAuthToken, removeAuthToken, isAuthenticated, getDecodedToken, login as loginUser } from '@/lib/api/apiAuth';
+import { getAuthToken, setAuthToken, removeAuthToken, isAuthenticated, getDecodedToken, login as loginUser, isAdminLocal } from '@/lib/api/apiAuth';
 
 // Crear un contexto de autenticación
 const AuthContext = createContext(null);
@@ -39,7 +39,13 @@ export function AuthProvider({ children }) {
       console.error('Login failed:', error);
       removeAuthToken();
       setUser(null);
-      throw error; // Re-lanza el error para que el componente de login lo maneje
+      
+      // Re-lanzar el error con mensaje mejorado
+      if (error.message) {
+        throw error; // El error ya tiene un mensaje personalizado
+      } else {
+        throw new Error('Error inesperado al iniciar sesión. Intenta nuevamente.');
+      }
     } finally {
       setLoading(false);
     }
@@ -54,7 +60,8 @@ export function AuthProvider({ children }) {
   // El valor que se proveerá a los consumidores del contexto
   const authContextValue = {
     user,
-    isAuthenticated: !!user, // Usar el estado del usuario en lugar de la función
+    isAuthenticated: () => isAuthenticated(), // Usar la función importada
+    isAdmin: () => isAdminLocal(), // Verificar si es admin localmente
     loading,
     login,
     logout,

@@ -11,6 +11,7 @@ export default function LoginPage() {
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
   const { login } = useAuth();
 
   const handleInputChange = (e) => {
@@ -24,6 +25,13 @@ export default function LoginPage() {
       setErrors(prev => ({
         ...prev,
         [name]: ''
+      }));
+    }
+    // Limpiar error general cuando el usuario empiece a escribir
+    if (errors.general) {
+      setErrors(prev => ({
+        ...prev,
+        general: ''
       }));
     }
   };
@@ -60,9 +68,12 @@ export default function LoginPage() {
       // Usar el hook de autenticación que maneja la redirección automáticamente
       await login(formData.email, formData.password);
       console.log('Login exitoso');
+      setSuccessMessage('¡Inicio de sesión exitoso! Redirigiendo...');
+      setErrors({}); // Limpiar errores
     } catch (error) {
       console.error('Error en el login:', error);
       setErrors({ general: error.message || 'Error al iniciar sesión. Inténtalo de nuevo.' });
+      setSuccessMessage(''); // Limpiar mensaje de éxito
     } finally {
       setIsLoading(false);
     }
@@ -85,10 +96,29 @@ export default function LoginPage() {
         {/* Formulario de login */}
         <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
           <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Mensaje de éxito */}
+            {successMessage && (
+              <div className="bg-green-50 border border-green-300 text-green-700 px-4 py-3 rounded-lg text-sm flex items-start space-x-2">
+                <svg className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <div>
+                  <p className="font-medium">¡Éxito!</p>
+                  <p className="text-sm mt-1">{successMessage}</p>
+                </div>
+              </div>
+            )}
+
             {/* Error general */}
             {errors.general && (
-              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
-                {errors.general}
+              <div className="bg-red-50 border border-red-300 text-red-700 px-4 py-3 rounded-lg text-sm flex items-start space-x-2">
+                <svg className="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <div>
+                  <p className="font-medium">Error de autenticación</p>
+                  <p className="text-sm mt-1">{errors.general}</p>
+                </div>
               </div>
             )}
 

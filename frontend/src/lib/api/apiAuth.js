@@ -61,7 +61,18 @@ export const login = async (email, password) => {
 
     return response;
   } catch (error) {
-    throw new Error(error.message || 'Error al iniciar sesión');
+    // Manejar errores específicos de autenticación
+    if (error.message && error.message.includes('Credenciales inválidas')) {
+      throw new Error('El correo electrónico o la contraseña son incorrectos. Por favor, verifica tus datos e intenta nuevamente.');
+    }
+    
+    // Para otros errores de red o servidor
+    if (error.message && error.message.includes('fetch')) {
+      throw new Error('Error de conexión. Verifica tu conexión a internet e intenta nuevamente.');
+    }
+    
+    // Error genérico como fallback
+    throw new Error(error.message || 'Error al iniciar sesión. Intenta nuevamente.');
   }
 };
 
@@ -208,11 +219,24 @@ export const verifyToken = async () => {
   }
 };
 
+// Verificar si el usuario es admin localmente (sin llamada al servidor)
+export const isAdminLocal = () => {
+  const userData = getCurrentUser();
+  return userData?.rol === 'admin' || userData?.rol === 'administrador';
+};
+
 export const verifyAdmin = async () => {
   try {
     const response = await apiFetch('/auth/verify-admin');
     return response.isAdmin;
   } catch (error) {
+    // Si es un error 403, significa que el usuario no es admin
+    // No es necesario loguear este error ya que es esperado
+    if (error.message && error.message.includes('Acceso denegado')) {
+      return false;
+    }
+    // Para otros errores, loguear pero retornar false
+    console.error('Error verificando admin status:', error.message);
     return false;
   }
 };

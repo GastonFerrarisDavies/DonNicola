@@ -23,7 +23,6 @@ exports.isAdmin = (req, res, next) => {
         return res.status(401).json({ message: 'No autenticado. Token requerido.' });
     }
     
-    
     if (req.user.rol === 'admin' || req.user.rol === 'administrador') { // Acepta ambos valores
         next(); // Si es admin, pasa al siguiente
     } else {

@@ -19,14 +19,23 @@ export default function AccessDenied() {
 
         {/* Message */}
         <p className="text-gray-600 mb-8 leading-relaxed">
-          No tienes permisos para acceder a esta página. Solo los usuarios con rol de administrador pueden acceder al dashboard.
+          No tienes permisos para acceder al dashboard. Solo los usuarios con rol de administrador pueden acceder a esta sección. 
+          Puedes acceder a tu perfil para ver tus datos y configuraciones disponibles.
         </p>
 
         {/* Actions */}
         <div className="space-y-4">
           <Link
-            href="/"
+            href="/perfil"
             className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center"
+          >
+            <Home className="w-5 h-5 mr-2" />
+            Ir a Mi Perfil
+          </Link>
+
+          <Link
+            href="/"
+            className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center"
           >
             <Home className="w-5 h-5 mr-2" />
             Ir al Inicio

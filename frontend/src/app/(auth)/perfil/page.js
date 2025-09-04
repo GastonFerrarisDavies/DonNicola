@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { User, Mail, Calendar, Shield, ArrowLeft, Edit, Save, X, LogOut } from 'lucide-react';
+import { User, Mail, Calendar, Shield, ArrowLeft, Edit, Save, X, LogOut, Home } from 'lucide-react';
 import Link from 'next/link';
 import { getCurrentUser, updateProfile, isAuthenticated } from '@/lib/api/apiAuth';
 import { useAuth } from '@/hooks/useAuth';
@@ -11,6 +11,7 @@ export default function PerfilPage() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
     createdAt: ''
@@ -18,10 +19,10 @@ export default function PerfilPage() {
   const [errors, setErrors] = useState({});
   const [saving, setSaving] = useState(false);
   const router = useRouter();
-  const { logout } = useAuth();
+  const { logout, isAdmin: isAdminFromAuth } = useAuth();
 
   useEffect(() => {
-    // Verificar autenticación
+    // Verificar autenticación primero
     if (!isAuthenticated()) {
       router.push('/login');
       return;
@@ -29,7 +30,16 @@ export default function PerfilPage() {
 
     // Cargar datos del usuario
     loadUserData();
-  }, []);
+    
+    // Verificar si el usuario es administrador
+    checkAdminStatus();
+  }, [router, isAdminFromAuth]);
+
+  const checkAdminStatus = () => {
+    // Verificar si el usuario es admin usando el hook de autenticación
+    const adminFromAuth = isAdminFromAuth();
+    setIsAdmin(adminFromAuth);
+  };
 
   const loadUserData = () => {
     try {
@@ -129,7 +139,15 @@ export default function PerfilPage() {
                 Volver al inicio
               </Link>
             </div>
-            <h1 className="text-xl font-semibold text-gray-900">Mi Perfil</h1>
+            <div className="flex items-center space-x-4">
+              <h1 className="text-xl font-semibold text-gray-900">Mi Perfil</h1>
+              {isAdmin && (
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                  <Shield className="w-3 h-3 mr-1" />
+                  Administrador
+                </span>
+              )}
+            </div>
           </div>
         </div>
       </header>
@@ -223,8 +241,27 @@ export default function PerfilPage() {
                     </label>
                     <div className="flex items-center text-gray-900">
                       <Shield className="w-4 h-4 mr-2 text-gray-500" />
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                        {user?.rol || 'usuario'}
+                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                        user?.rol === 'admin' || user?.rol === 'administrador' 
+                          ? 'bg-purple-100 text-purple-800' 
+                          : 'bg-blue-100 text-blue-800'
+                      }`}>
+                        {user?.rol === 'admin' || user?.rol === 'administrador' ? 'Administrador' : 'Usuario'}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Permisos */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Permisos
+                    </label>
+                    <div className="flex items-center text-gray-900">
+                      <span className="text-sm">
+                        {isAdmin 
+                          ? 'Acceso completo al sistema' 
+                          : 'Acceso limitado - Solo perfil'
+                        }
                       </span>
                     </div>
                   </div>
@@ -286,12 +323,26 @@ export default function PerfilPage() {
         <div className="mt-8 bg-white rounded-lg shadow-sm border border-gray-200 p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Acciones</h3>
           <div className="flex flex-col sm:flex-row gap-4">
+            {/* Solo mostrar el botón de Dashboard si es administrador */}
+            {isAdmin && (
+              <Link
+                href="/dashboard"
+                className="inline-flex items-center px-4 py-2 bg-quaternary text-white rounded-lg hover:bg-quaternary/80 transition-colors duration-200"
+              >
+                <Home className="w-4 h-4 mr-2" />
+                Ir al Dashboard
+              </Link>
+            )}
+            
+            {/* Botón para ir al inicio (disponible para todos) */}
             <Link
-              href="/dashboard"
-              className="inline-flex items-center px-4 py-2 bg-quaternary text-white rounded-lg hover:bg-quaternary/80 transition-colors duration-200"
+              href="/"
+              className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"
             >
-              Ir al Dashboard
+              <Home className="w-4 h-4 mr-2" />
+              Ir al Inicio
             </Link>
+            
             <Link
               href="/login"
               className="inline-flex items-center px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors duration-200"

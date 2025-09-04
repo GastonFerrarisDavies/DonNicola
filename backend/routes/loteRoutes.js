@@ -6,6 +6,7 @@ const authMiddleware = require('../middleware/authMiddleware');
 // Rutas de Lotes
 // Lectura - Acceso para usuarios autenticados
 router.get('/', authMiddleware.verifyToken, loteController.getAllLotes);
+router.get('/sucursal/:sucursalId', authMiddleware.verifyToken, loteController.getLotesBySucursal);
 router.get('/:id', authMiddleware.verifyToken, loteController.getLoteById);
 
 // Operaciones de escritura - Solo administradores

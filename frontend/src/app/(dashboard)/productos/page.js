@@ -38,7 +38,7 @@ export default function ProductosPage() {
 
   const tiposProducto = [
     { id: 1, nombre: "Queso" },
-    { id: 2, nombre: "Fiambre" },
+    { id: 2, nombre: "Embutido" },
     { id: 3, nombre: "Materia Prima" }
   ]
 

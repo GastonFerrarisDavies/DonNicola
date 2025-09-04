@@ -16,10 +16,6 @@ export async function apiFetch(endpoint, options = {}) {
     let authToken = null;
     if (typeof window !== 'undefined') {
         authToken = localStorage.getItem('authToken');
-        console.log('🔐 Token encontrado:', authToken ? 'SÍ' : 'NO');
-        if (authToken) {
-            console.log('🔑 Token:', authToken.substring(0, 20) + '...');
-        }
     }
     
     const defaultHeaders = {
@@ -29,9 +25,6 @@ export async function apiFetch(endpoint, options = {}) {
     // Agregar el token de autorización si está disponible
     if (authToken) {
         defaultHeaders['Authorization'] = `Bearer ${authToken}`;
-        console.log('📤 Enviando header Authorization:', `Bearer ${authToken.substring(0, 20)}...`);
-    } else {
-        console.log('⚠️ No se envió header Authorization - Token no encontrado');
     }
 
     const config = {
@@ -42,19 +35,40 @@ export async function apiFetch(endpoint, options = {}) {
         },
     };
 
-    console.log('🌐 Haciendo petición a:', url);
-    console.log('📋 Configuración:', config);
+    // Solo loguear en desarrollo para evitar spam en consola
+    if (process.env.NODE_ENV === 'development') {
+        console.log('🌐 Haciendo petición a:', url);
+    }
 
     try {
         const response = await fetch(url, config);
 
-        console.log('📥 Respuesta recibida:', response.status, response.statusText);
+        // Solo loguear en desarrollo para evitar spam en consola
+        if (process.env.NODE_ENV === 'development') {
+            console.log('📥 Respuesta recibida:', response.status, response.statusText);
+        }
 
         if (!response.ok) {
             // Intenta parsear el error del backend si es JSON
             const errorData = await response.json().catch(() => ({ message: 'Error desconocido del servidor.' }));
             console.error('❌ Error en la petición:', errorData);
-            throw new Error(errorData.message || `Error en la petición: ${response.status} ${response.statusText}`);
+            
+            // Manejar errores específicos por código de estado
+            if (response.status === 400) {
+                throw new Error(errorData.message || 'Datos inválidos enviados al servidor.');
+            } else if (response.status === 401) {
+                throw new Error('No autorizado. Por favor, inicia sesión nuevamente.');
+            } else if (response.status === 403) {
+                throw new Error('Acceso denegado. No tienes permisos para realizar esta acción.');
+            } else if (response.status === 404) {
+                throw new Error('Recurso no encontrado.');
+            } else if (response.status === 409) {
+                throw new Error(errorData.message || 'Conflicto con el recurso existente.');
+            } else if (response.status >= 500) {
+                throw new Error('Error interno del servidor. Intenta nuevamente más tarde.');
+            } else {
+                throw new Error(errorData.message || `Error en la petición: ${response.status} ${response.statusText}`);
+            }
         }
 
         // Si la respuesta es 204 No Content, no intentes parsear JSON
@@ -63,7 +77,10 @@ export async function apiFetch(endpoint, options = {}) {
         }
 
         const data = await response.json();
-        console.log('✅ Datos recibidos:', data);
+        // Solo loguear en desarrollo para evitar spam en consola
+        if (process.env.NODE_ENV === 'development') {
+            console.log('✅ Datos recibidos:', data);
+        }
         return data;
     } catch (error) {
         console.error(`❌ Error en apiFetch para ${url}:`, error);

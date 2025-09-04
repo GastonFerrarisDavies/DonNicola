@@ -14,6 +14,25 @@ exports.getAllLotes = async (req, res) => {
     }
 };
 
+exports.getLotesBySucursal = async (req, res) => {
+    try {
+        const { sucursalId } = req.params;
+        const lotes = await db.Lote.findAll({
+            where: {
+                sucursalId: sucursalId,
+                cantidad: { [db.Sequelize.Op.gt]: 0 } // Solo lotes con stock disponible
+            },
+            include: [
+                { model: db.Sucursal, as: 'Sucursal' },
+                { model: db.Producto, as: 'Producto' }
+            ]
+        });
+        res.json(lotes);
+    } catch (error) {
+        res.status(500).json({message: 'Error al obtener los lotes de la sucursal', error: error.message});
+    }
+};
+
 exports.getLoteById = async (req, res) => {
     try {
         const lote = await db.Lote.findByPk(req.params.id, {

@@ -7,14 +7,25 @@ exports.login = async (req, res) => {
     const { email, password } = req.body;
 
     try {
+        // Validar que se proporcionen email y password
+        if (!email || !password) {
+            return res.status(400).json({ 
+                message: 'El correo electrónico y la contraseña son requeridos.' 
+            });
+        }
+
         const user = await db.Usuario.findOne({ where: { email } });
         if (!user) {
-            return res.status(400).json({ message: 'Credenciales inválidas.' });
+            return res.status(400).json({ 
+                message: 'Credenciales inválidas.' 
+            });
         }
 
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            return res.status(400).json({ message: 'Credenciales inválidas.' });
+            return res.status(400).json({ 
+                message: 'Credenciales inválidas.' 
+            });
         }
 
         const payload = {
@@ -37,7 +48,10 @@ exports.login = async (req, res) => {
 
     } catch (error) {
         console.error('Error en el login:', error);
-        res.status(500).json({ message: 'Error interno del servidor al iniciar sesión.', error: error.message });
+        res.status(500).json({ 
+            message: 'Error interno del servidor al iniciar sesión. Por favor, intenta nuevamente más tarde.', 
+            error: error.message 
+        });
     }
 };
 

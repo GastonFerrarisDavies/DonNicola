@@ -6,6 +6,10 @@ export async function getAllLotes() {
     return apiFetch('/lotes');
 }
 
+export async function getLotesBySucursal(sucursalId) {
+    return apiFetch(`/lotes/sucursal/${sucursalId}`);
+}
+
 export async function getLoteById(id) {
     return apiFetch(`/lotes/${id}`);
 }
