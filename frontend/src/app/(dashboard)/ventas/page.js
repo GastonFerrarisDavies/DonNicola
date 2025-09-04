@@ -302,7 +302,7 @@ export default function VentasPage() {
                         <div className="flex space-x-4">
                             <button
                                 onClick={() => setViewMode('create')}
-                                className={`px-4 py-2 rounded-md ${
+                                className={`px-4 py-2 rounded-md cursor-pointer${
                                     viewMode === 'create' 
                                         ? 'bg-blue-600 text-white' 
                                         : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
@@ -545,7 +545,7 @@ export default function VentasPage() {
                                     <button
                                         onClick={crearVenta}
                                         disabled={loading}
-                                        className="bg-green-600 text-white px-6 py-3 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                                        className="cursor-pointer bg-green-600 text-white px-6 py-3 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
                                         {loading ? 'Creando Venta...' : 'Crear Venta'}
                                     </button>

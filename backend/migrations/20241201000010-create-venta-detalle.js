@@ -28,6 +28,16 @@ module.exports = {
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
+      loteId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'Lotes',
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
+      },
       productoId: {
         type: Sequelize.INTEGER,
         allowNull: false,

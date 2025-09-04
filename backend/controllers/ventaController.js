@@ -191,13 +191,22 @@ exports.updateVenta = async (req, res) => {
         if (!venta) {
             return res.status(404).json({message: 'Venta no encontrada'});
         }
-        await venta.update(req.body);
-        res.json(venta);
+        
+        const { clienteId, sucursalId, fecha, total } = req.body;
+        await venta.update({
+            clienteId,
+            sucursalId,
+            fecha: new Date(fecha),
+            total
+        });
+        
+        res.json({message: 'Venta actualizada correctamente', venta});
     } catch (error) {
+        console.error('Error en updateVenta:', error);
         res.status(500).json({message: 'Error al actualizar la venta', error: error.message});
     }
 };
-
+    
 exports.deleteVenta = async (req, res) => {
     try {
         const venta = await db.Venta.findByPk(req.params.id);

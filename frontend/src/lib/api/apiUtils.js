@@ -61,11 +61,11 @@ export async function apiFetch(endpoint, options = {}) {
             } else if (response.status === 403) {
                 throw new Error('Acceso denegado. No tienes permisos para realizar esta acción.');
             } else if (response.status === 404) {
-                throw new Error('Recurso no encontrado.');
+                throw new Error(errorData.message || 'Recurso no encontrado.');
             } else if (response.status === 409) {
                 throw new Error(errorData.message || 'Conflicto con el recurso existente.');
             } else if (response.status >= 500) {
-                throw new Error('Error interno del servidor. Intenta nuevamente más tarde.');
+                throw new Error(errorData.message || 'Error interno del servidor. Intenta nuevamente más tarde.');
             } else {
                 throw new Error(errorData.message || `Error en la petición: ${response.status} ${response.statusText}`);
             }
